@@ -1,0 +1,154 @@
+﻿@using GamerStore.Infrastructure
+@using GamerStore.Models
+@using GamerStore.Models.ViewModels
+@model Product
+
+@{
+    string productName = string.Join(" ", Model.ShortDescription, Model.Brand?.Name, Model.Model, Model.Title);
+}
+
+<style>
+    .gaming-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        width: 18rem;
+        height: 30rem; /* Трохи збільшив для кращої типографіки */
+        margin: 10px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+        /* Ефект підсвічування при наведенні */
+        .gaming-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-blue, #00d4ff);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+    .top-image-wrapper {
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.2);
+        margin: 10px;
+        border-radius: 12px;
+        height: 240px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+
+    .gaming-card:hover .top-image {
+        transform: scale(1.1);
+    }
+
+    .card-body {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+    }
+
+    .product-title {
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+
+    .price-tag {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--neon-blue, #00d4ff);
+        font-weight: bold;
+        font-size: 1.25rem;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+
+    /* Кнопки */
+    .btn-buy {
+        background: linear-gradient(45deg, #9d00ff, #00d4ff);
+        border: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 10px;
+        transition: 0.3s;
+    }
+
+        .btn-buy:hover {
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+            filter: brightness(1.2);
+        }
+
+    .btn-out-of-stock {
+        background: transparent;
+        border: 1px solid #ff4444;
+        color: #ff4444;
+        opacity: 0.7;
+    }
+
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<div class="card gaming-card shadow-lg">
+    <div class="top-image-wrapper">
+        @if (!string.IsNullOrEmpty(Model.ImageFileName))
+        {
+            <img src="/products/@Model.ImageFileName" class="top-image" alt="@Model.Brand?.Name @Model.Model" />
+        }
+        else
+        {
+            <div class="text-muted"><i class="fas fa-box-open fa-3x"></i></div>
+        }
+    </div>
+
+    <div class="card-body">
+        <div>
+            <h5 class="product-title text-truncate-2">
+                @productName
+            </h5>
+            <div class="price-tag mb-3">
+                @Model?.Price.ToString("n0") <small style="font-size: 0.7em">UAH</small>
+            </div>
+        </div>
+
+        <form id="@Model?.Id" asp-controller="Cart" asp-antiforgery="true" method="post" class="mt-auto">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Brand" value="@Model.Brand" />
+            <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+
+            @{
+                if (Model.IsInStock == 1)
+                {
+                    <button type="submit" class="btn btn-buy btn-sm w-100 rounded-pill">
+                        <i class="fas fa-shopping-cart me-2"></i> Додати до інвентарю
+                    </button>
+                }
+                else
+                {
+                    <button type="button" disabled class="btn btn-out-of-stock btn-sm w-100 rounded-pill">
+                        <i class="fas fa-times-circle me-2"></i> Out of Stock
+                    </button>
+                }
+            }
+        </form>
+    </div>
+</div>

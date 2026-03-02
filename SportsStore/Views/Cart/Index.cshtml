@@ -1,0 +1,178 @@
+﻿@model CartViewModel
+
+@{
+    this.Layout = "_CartLayout";
+}
+
+<style>
+    /* Картка товару в інвентарі */
+    .inventory-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .inventory-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+    /* Зображення товару */
+    .product-img-wrapper {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Підсумок (Summary) */
+    .summary-panel {
+        background: linear-gradient(145deg, rgba(20, 22, 30, 0.9), rgba(10, 12, 18, 0.9));
+        border: 1px solid var(--neon-pink);
+        border-radius: 20px;
+        position: sticky;
+        top: 100px;
+    }
+
+    /* Кнопки */
+    .btn-remove {
+        color: #ff4d4d;
+        background: transparent;
+        border: 1px solid #ff4d4d;
+        transition: all 0.2s;
+    }
+
+        .btn-remove:hover {
+            background: #ff4d4d;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+        }
+
+    .badge-qty {
+        background: var(--neon-blue);
+        color: #000;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .total-price {
+        color: var(--neon-blue);
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+    }
+
+    .back-link {
+        color: #888;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .back-link:hover {
+            color: var(--neon-blue);
+        }
+</style>
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-12 col-lg-8">
+            <div class="d-flex align-items-center justify-content-between mb-4 px-2">
+                <div>
+                    <h2 class="h3 fw-bold mb-0 text-white text-uppercase tracking-wider">Мій Інвентар</h2>
+                    <p class="text-secondary small mb-0">Слотів зайнято: @(Model?.Cart?.Lines.Count() ?? 0)</p>
+                </div>
+                <a asp-action="Index" asp-controller="Shop" class="back-link small">
+                    <i class="fas fa-chevron-left me-1"></i> Повернутися до арсеналу
+                </a>
+            </div>
+
+            <div class="row">
+                @if (!(Model?.Cart?.Lines.Any() ?? false))
+                {
+                    <div class="col-12 text-center py-5 glass-panel rounded-4">
+                        <i class="fas fa-ghost fa-3x text-secondary mb-3"></i>
+                        <h4 class="text-muted">Тут поки що пусто...</h4>
+                        <a asp-action="Index" asp-controller="Shop" class="btn btn-outline-info mt-3">Розпочати закупку</a>
+                    </div>
+                }
+
+                @foreach (var line in Model?.Cart?.Lines ?? Enumerable.Empty<CartLine>())
+                {
+                    <div class="col-12 mb-3">
+                        <div class="inventory-card card">
+                            <div class="card-body p-3">
+                                <div class="row align-items-center">
+                                    <div class="col-3 col-md-2">
+                                        <div class="product-img-wrapper">
+                                            <img src="/products/@line.Product.ImageFileName" class="img-fluid" alt="@line.Product.Model">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-7">
+                                        <h5 class="mb-1 text-white fw-bold">@line.Product.Brand?.Name @line.Product.Model</h5>
+                                        <p class="text-secondary small mb-2 d-none d-md-block">ID девайсу: #00@line.Product.Id</p>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="badge badge-qty">x @line.Quantity</span>
+                                            <span class="text-info small">@line.Product.Price.ToString("n0") грн / од.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3 col-md-3 text-end">
+                                        <div class="mb-2 fw-bold text-white fs-5">
+                                            @((line.Quantity * line.Product.Price).ToString("n0")) <small>грн</small>
+                                        </div>
+                                        <form method="post" asp-action="Remove" asp-controller="Cart">
+                                            <input type="hidden" name="id" value="@line.Product.Id" />
+                                            <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl" />
+                                            <button type="submit" class="btn btn-sm btn-remove rounded-pill px-3">
+                                                <i class="fas fa-trash-alt me-1"></i> <span class="d-none d-md-inline">Видалити</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="summary-panel card shadow-lg">
+                <div class="card-body p-4">
+                    <h4 class="text-white text-center mb-4 text-uppercase fw-bold" style="letter-spacing: 1px;">Загальний Кредит</h4>
+
+                    <div class="d-flex justify-content-between mb-3 text-secondary">
+                        <span>Проміжна сума</span>
+                        <span>@Model?.Cart?.ComputeTotalValue().ToString("n0") грн</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="text-white">До сплати</span>
+                        <span class="total-price fs-3">@Model?.Cart?.ComputeTotalValue().ToString("n0") <small class="fs-6">грн</small></span>
+                    </div>
+
+                    <hr class="border-secondary opacity-25 mb-4">
+
+                    <div class="d-grid gap-3">
+                        <a asp-action="Checkout" asp-controller="Order" class="btn btn-checkout py-3 rounded-pill fs-5">
+                            <i class="fas fa-shield-alt me-2"></i> Оформити замовлення
+                        </a>
+                        <a href="@Model?.ReturnUrl" class="btn btn-outline-secondary py-2 rounded-pill">
+                            Продовжити вибір
+                        </a>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <small class="text-muted"><i class="fas fa-lock me-2 text-success"></i> Захищений протокол оплати</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

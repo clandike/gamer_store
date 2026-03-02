@@ -1,0 +1,23 @@
+﻿@using GamerStore.Infrastructure
+@using GamerStore.Models
+@using GamerStore.Models.ViewModels
+@model ProductsListViewModel
+
+@{
+    Layout = "_ShopLayout";
+    var route = this.Model.CurrentCategory is null ? "pagination" : "categoryPage";
+}
+
+<div class="d-flex flex-wrap justify-content-start gap-0">
+    @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
+    {
+        <partial name="_ProductSummary" model="p" />
+    }
+</div>
+
+<div class="clearfix"></div>
+
+<div page-model="@Model?.PagingInfo" page-classes-enabled="true" page-route=@route
+     page-class="btn" page-class-normal="btn-outline-dark"
+     page-class-selected="btn-primary" page-url-category="@Model?.CurrentCategory!" class="btn-group pull-right m-1">
+</div>

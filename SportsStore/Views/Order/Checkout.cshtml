@@ -1,0 +1,193 @@
+﻿@model Order
+
+@{
+    Layout = "_CartLayout";
+}
+
+<style>
+    :root {
+        --neon-pink: #ff007a;
+        --neon-blue: #00d4ff;
+        --dark-surface: #12141d;
+    }
+
+    .checkout-title {
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(255, 0, 122, 0.3);
+    }
+
+    .gaming-card {
+        background: rgba(20, 22, 30, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+        .gaming-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
+    .card-header-gaming {
+        background: linear-gradient(90deg, rgba(255, 0, 122, 0.2), transparent);
+        border-bottom: 1px solid var(--neon-pink);
+        padding: 15px 25px;
+    }
+
+        .card-header-gaming h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--neon-pink);
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+    .form-label {
+        font-size: 0.85rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 5px;
+    }
+
+    .form-control-gaming {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+
+        .form-control-gaming:focus {
+            border-color: var(--neon-blue) !important;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2) !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+
+    .form-check-input {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-color: var(--neon-pink);
+        cursor: pointer;
+    }
+
+        .form-check-input:checked {
+            background-color: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+    .btn-finish {
+        background: linear-gradient(45deg, var(--neon-pink), #9d00ff);
+        border: none;
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+        padding: 15px 50px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: 0.4s;
+        box-shadow: 0 5px 15px rgba(255, 0, 122, 0.3);
+    }
+
+        .btn-finish:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 0, 122, 0.5);
+            filter: brightness(1.2);
+        }
+
+    .validation-summary {
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px solid #ff4444;
+        border-radius: 10px;
+        padding: 15px;
+        color: #ff8888;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="checkout-title display-5 fw-bold">Оформлення деплою</h2>
+        <p class="text-secondary">Підтвердіть координати для доставки вашого арсеналу</p>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div asp-validation-summary="All" class="validation-summary mb-4"></div>
+    }
+
+    <form asp-action="Checkout" method="post">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="gaming-card mb-4 shadow-lg">
+                    <div class="card-header-gaming">
+                        <h3><i class="fas fa-map-marker-alt me-2"></i> Дані отримувача та адреса</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="Name" class="form-label">Позивний / ПІБ:</label>
+                                <input asp-for="Name" id="Name" class="form-control form-control-gaming" placeholder="Джон Доу" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="Phone" class="form-label">Контактний зв'язок:</label>
+                                <input asp-for="Phone" id="Phone" class="form-control form-control-gaming" placeholder="+380..." />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="Email" class="form-label">Електронний вузол (Email):</label>
+                                <input asp-for="Email" id="Email" class="form-control form-control-gaming" placeholder="user@net.ua" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="Address" class="form-label">Локація (Вулиця, Будинок, Кв):</label>
+                                <input asp-for="Address" id="Address" class="form-control form-control-gaming" placeholder="вул. Протокольна, 10..." />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="State" class="form-label">Область/Сектор:</label>
+                                <input asp-for="State" id="State" class="form-control form-control-gaming" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Zip" class="form-label">Індекс:</label>
+                                <input asp-for="Zip" id="Zip" class="form-control form-control-gaming" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Country" class="form-label">Країна:</label>
+                                <input asp-for="Country" id="Country" class="form-control form-control-gaming" value="Україна" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gaming-card mb-5">
+                    <div class="card-header-gaming" style="border-color: var(--neon-blue); background: rgba(0, 212, 255, 0.1);">
+                        <h3 style="color: var(--neon-blue);"><i class="fas fa-box-open me-2"></i> Додаткові модифікації</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="form-check d-flex align-items-center">
+                            <input asp-for="GiftWrap" id="GiftWrap" class="form-check-input me-3" type="checkbox" style="width: 25px; height: 25px;" />
+                            <label for="GiftWrap" class="form-check-label fs-6 text-white" style="cursor:pointer;">
+                                Подарункове пакування (Premium RGB Wrap)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-5">
+                    <button class="btn btn-finish btn-lg" type="submit">
+                        <i class="fas fa-check-circle me-2"></i> Завершити замовлення
+                    </button>
+                    <div class="mt-3">
+                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Натискаючи кнопку, ви підтверджуєте готовність до апгрейду</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>

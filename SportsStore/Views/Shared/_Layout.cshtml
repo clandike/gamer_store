@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CyberGear</title>
+    <link href="/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #9d00ff;
+            --dark-header: #05070a;
+            --dark-bg: #0b0e14;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Навігація */
+        header {
+            background: var(--dark-header) !important;
+            border-bottom: 2px solid var(--neon-blue);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
+        }
+
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            color: var(--neon-blue) !important;
+            text-transform: uppercase;
+        }
+
+        .nav-link-custom {
+            color: #fff !important;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+            .nav-link-custom:hover {
+                color: var(--neon-blue) !important;
+                text-shadow: 0 0 10px var(--neon-blue);
+                border-bottom: 1px solid var(--neon-blue);
+            }
+
+        /* Контейнер для основного контенту */
+        main {
+            flex: 1 0 auto;
+            background-color: var(--dark-bg);
+        }
+
+        /* Футер */
+        footer {
+            background: #05070a !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+
+        .footer-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #time {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Кастомізація scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--neon-blue);
+            }
+    </style>
+</head>
+<body>
+    <header class="py-3 shadow-lg">
+        <div class="container">
+            <nav class="d-flex flex-wrap align-items-center justify-content-between">
+                <a asp-action="Index" asp-controller="Home" class="navbar-brand d-flex align-items-center text-decoration-none">
+                    <img src="icon/logo.png" height="40" class="me-2 neon-icon" style="filter: drop-shadow(0 0 5px var(--neon-blue));" />
+                    <span class="fw-bold h3 mb-0">CyberGear</span>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a asp-action="Index" asp-controller="CompanyInfo" class="nav-link px-3 nav-link-custom">ПРО НАС</a></li>
+                    <li><a asp-action="Index" asp-controller="EquipmentTip" class="nav-link px-3 nav-link-custom">ГАЙДИ</a></li>
+                    <li><a asp-controller="Shop" asp-action="Index" class="nav-link px-3 nav-link-custom text-info fw-bold">КАТАЛОГ</a></li>
+                </ul>
+
+                <div class="text-end d-flex align-items-center">
+                    <div class="bg-dark p-2 rounded-circle border border-secondary shadow-sm">
+                        <vc:cart-summary />
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container py-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="text-light py-5 mt-5">
+        <div class="container">
+            <div class="row g-4 text-center text-md-start">
+                <div class="col-md-4">
+                    <h5 class="footer-title text-uppercase">Technical Support</h5>
+                    <ul class="list-unstyled text-secondary small">
+                        <li class="mb-2"><i class="fas fa-envelope me-2 text-info"></i> support@cybergear.pro</li>
+                        <li class="mb-2"><i class="fas fa-phone-alt me-2 text-info"></i> +380 (95) 830 2190</li>
+                        <li><i class="fas fa-map-marker-alt me-2 text-info"></i> вул. Кібернетична, 404, м. Київ</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="footer-title text-uppercase">System Status</h5>
+                    <ul class="list-unstyled text-secondary small">
+                        <li class="mb-2"><strong>Пн–Пт:</strong> 09:00 – 20:00 (Online)</li>
+                        <li class="mb-2"><strong>Сб:</strong> 11:00 – 18:00</li>
+                        <li><strong>Нд:</strong> Standby Mode</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 text-center">
+                    <h5 class="footer-title text-uppercase">System Time</h5>
+                    <p id="time" class="display-6">00:00</p>
+                    <div class="small text-uppercase tracking-widest text-white-50">Local Server Time</div>
+                </div>
+            </div>
+
+            <hr class="my-4 border-secondary opacity-25">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center small text-secondary">
+                <span>&copy; 2026 <strong>CyberGear</strong>. Prepared for the next level.</span>
+                <div class="social-icons">
+                    <a href="#" class="text-secondary me-3"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="text-secondary me-3"><i class="fab fa-twitch"></i></a>
+                    <a href="#" class="text-secondary"><i class="fab fa-steam"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeElement = document.getElementById('time');
+            timeElement.textContent = now.toLocaleTimeString('uk-UA', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>

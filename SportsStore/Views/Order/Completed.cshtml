@@ -1,0 +1,12 @@
+﻿@model int
+
+@{
+    this.Layout = "_CartLayout";
+}
+
+<div class="text-center">
+    <h2>Дякуємо!</h2>
+    <p>Дякуємо за створення замовлення #@Model.</p>
+    <p>Віправимо пакунок якнайшвидше!</p>
+    <a class="btn btn-primary" asp-route="default">Повернутися на головну</a>
+</div>

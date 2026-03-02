@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "CyberGear - Ігрова Периферія та RGB Кастомізація";
+}
+
+<style>
+    /* Основні налаштування теми */
+    :root {
+        --neon-purple: #9d00ff;
+        --neon-blue: #00d4ff;
+        --neon-pink: #ff007a;
+        --dark-bg: #0b0e14;
+        --card-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: #e0e0e0;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* Анімований RGB градієнт для заголовків */
+    .rgb-text {
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: gradient-flow 3s linear infinite;
+    }
+
+    /* Стилізація головного зображення */
+    .hero-container {
+        position: relative;
+        border-bottom: 3px solid var(--neon-purple);
+        box-shadow: 0 0 30px rgba(157, 0, 255, 0.3);
+    }
+
+    .hero-image {
+        filter: brightness(0.7) contrast(1.1);
+        transition: transform 0.5s ease;
+    }
+
+    .hero-container:hover .hero-image {
+        transform: scale(1.02);
+    }
+
+    /* Картки та скляний ефект */
+    .glass-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+    /* Стилізація списку */
+    .gaming-list-item {
+        background: transparent !important;
+        color: #ccc !important;
+        border-left: 3px solid transparent !important;
+        transition: 0.3s;
+    }
+
+        .gaming-list-item:hover {
+            border-left: 3px solid var(--neon-pink) !important;
+            padding-left: 30px !important;
+            color: #fff !important;
+        }
+
+    /* Кнопки */
+    .btn-rgb {
+        background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+        border: none;
+        color: white;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+        .btn-rgb::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s;
+        }
+
+        .btn-rgb:hover::before {
+            opacity: 1;
+        }
+
+    .btn-outline-gaming {
+        border: 2px solid var(--neon-blue);
+        color: var(--neon-blue);
+        background: transparent;
+    }
+
+        .btn-outline-gaming:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+    /* Анімовані алерти (картки переваг) */
+    .gaming-badge {
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .gaming-badge::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--neon-purple);
+        }
+</style>
+
+<body>
+    <div class="mt-4 hero-container rounded-3 overflow-hidden">
+        <img src="pageImages/gaming_setup_main.webp" class="img-fluid w-100 object-fit-cover hero-image" alt="CyberGear Setup" style="max-height: 500px;">
+    </div>
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold mb-3">
+                <span class="rgb-text">CyberGear</span> — Твій Ultimate Setup
+            </h1>
+            <p class="lead text-secondary">Максимальна продуктивність, бездоганний відгук та повна RGB кастомізація.</p>
+        </div>
+
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="h3 mb-4 text-info"><i class="bi bi-cpu"></i> Технології майбутнього</h2>
+                <p class="fs-5 text-muted">Перетвори свій ігровий простір на професійну станцію. Ми пропонуємо тільки те, що пройшло тест у найзапекліших батлах:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item gaming-list-item">⚡ Механічні клавіатури з Hot-swap та кастомними свічами</li>
+                    <li class="list-group-item gaming-list-item">🎯 Миші з сенсорами нового покоління (26K+ DPI)</li>
+                    <li class="list-group-item gaming-list-item">🎧 Гарнітури з Hi-Res аудіо та об'ємним звуком 7.1</li>
+                    <li class="list-group-item gaming-list-item">📹 Стримінг-паки: камери 4K, мікрофони та хромакеї</li>
+                    <li class="list-group-item gaming-list-item">🌈 Розумне освітлення, синхронізоване з грою</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 glass-card rounded-4 border-info">
+                    <h3 class="text-center text-white mb-4">Топ категорії</h3>
+                    <div class="row g-2">
+                        <div class="col-6"><div class="p-3 border rounded text-center mb-2">Аксесуари</div></div>
+                        <div class="col-6"><div class="p-3 border rounded text-center mb-2">Периферія</div></div>
+                        <div class="col-6"><div class="p-3 border rounded text-center mb-2">Стримінг</div></div>
+                        <div class="col-6"><div class="p-3 border rounded text-center mb-2">Крісла</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center mb-5 g-4">
+            <div class="col-md-4">
+                <div class="alert glass-card gaming-badge shadow-sm p-4 h-100">
+                    <h4 class="text-warning">🔥 Loot Box</h4>
+                    <p class="small mb-0 text-white-50">Бонуси та ексклюзивні знижки для постійних гравців</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="alert glass-card gaming-badge shadow-sm p-4 h-100" style="--neon-purple: var(--neon-blue)">
+                    <h4 class="text-info">🚀 Fast Travel</h4>
+                    <p class="small mb-0 text-white-50">Миттєва відправка твого замовлення в день покупки</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="alert glass-card gaming-badge shadow-sm p-4 h-100" style="--neon-purple: var(--neon-pink)">
+                    <h4 class="text-success">🛠️ Tech Support</h4>
+                    <p class="small mb-0 text-white-50">Допомога у налаштуванні софту та макросів</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mb-5">
+            <p class="fs-4 fw-light italic">Level Up твій скіл починається з правильного девайсу.</p>
+        </div>
+
+        <div class="text-center pb-5">
+            <a asp-action="Index" asp-controller="Shop" class="btn btn-rgb btn-lg px-5 py-3 me-sm-3 mb-3 mb-sm-0 fw-bold shadow-lg">
+                В КАТАЛОГ ДЕВАЙСІВ
+            </a>
+            <a asp-action="Index" asp-controller="EquipmentTip" class="btn btn-outline-gaming btn-lg px-5 py-3 fw-bold">
+                Гайд по кастомізації
+            </a>
+        </div>
+    </div>
+</body>

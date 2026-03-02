@@ -1,0 +1,235 @@
+﻿@{
+    ViewData["Title"] = "Про CyberGear";
+}
+
+<style>
+    :root {
+        --neon-blue: #00d4ff;
+        --neon-purple: #9d00ff;
+        --neon-pink: #ff007a;
+        --dark-surface: #12141d;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+    }
+
+    body {
+        background-color: #0b0e14;
+        color: #e0e0e0;
+    }
+
+    /* Градієнтний текст */
+    .text-gradient {
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Ефект скла для карток */
+    .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .glass-panel:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(157, 0, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+    /* Стилізація вкладок (Tabs) */
+    .nav-tabs {
+        border-bottom: none;
+    }
+
+        .nav-tabs .nav-link {
+            color: #888;
+            border: none;
+            padding: 12px 25px;
+            transition: 0.3s;
+        }
+
+            .nav-tabs .nav-link.active {
+                background: transparent;
+                color: var(--neon-blue);
+                border-bottom: 3px solid var(--neon-blue);
+            }
+
+    /* Карусель */
+    .carousel-custom {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        border-left: 4px solid var(--neon-pink);
+    }
+
+    /* Статистика */
+    .stat-box {
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .stat-box:last-child {
+            border-right: none;
+        }
+
+    /* Іконки з неоновим світінням */
+    .neon-icon {
+        filter: drop-shadow(0 0 8px var(--neon-blue));
+    }
+</style>
+
+<div class="container my-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-gradient">Про CyberGear</h1>
+        <p class="lead text-secondary">Ми створюємо робочі місця для переможців з 2015 року</p>
+    </div>
+
+    <div class="position-relative overflow-hidden rounded-4 my-5 shadow-lg" style="height: 400px; border: 1px solid rgba(255,255,255,0.1);">
+        <img src="~/pageImages/gaming-hq.jpg" class="w-100 h-100 object-fit-cover" alt="CyberGear Lab">
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background: linear-gradient(to right, rgba(11,14,20,0.8), rgba(11,14,20,0.2));">
+            <div class="text-center p-4">
+                <h2 class="display-5 fw-bold text-white">Твій Setup — Твоя Зброя.</h2>
+                <p class="fs-5 text-info">Найкраща периферія, відібрана професійними кіберспортсменами</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @{
+            var values = new[]
+            {
+                new { Icon = "fa-microchip", Color = "text-info", Title = "Технологічність", Text = "Тільки топові сенсори, оптичні світчі та нульова затримка (Low Latency)." },
+                new { Icon = "fa-headset", Color = "text-primary", Title = "Експертна підтримка", Text = "Ми допоможемо налаштувати DPI, макроси та синхронізувати RGB підсвітку." },
+                new { Icon = "fa-award", Color = "text-warning", Title = "PRO Стандарт", Text = "Офіційний дистриб'ютор Razer, Logitech G, SteelSeries та HyperX." }
+                };
+        }
+        @foreach (var item in values)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 glass-panel p-3">
+                    <div class="card-body text-center">
+                        <i class="fas @item.Icon fa-3x @item.Color mb-4 neon-icon"></i>
+                        <h4 class="card-title text-white mb-3">@item.Title</h4>
+                        <p class="card-text text-secondary">@item.Text</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="my-5 py-4">
+        <ul class="nav nav-tabs justify-content-center mb-4" id="aboutTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab">📜 Еволюція</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#mission" type="button" role="tab">🎯 Ціль</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab">👥 Склад команди</button>
+            </li>
+        </ul>
+        <div class="tab-content glass-panel p-5 mt-n2 shadow" id="aboutTabsContent">
+            <div class="tab-pane fade show active" id="history" role="tabpanel">
+                <h3 class="text-white">З 2015 року в грі</h3>
+                <p class="text-secondary fs-5">Ми починали як маленька спільнота ентузіастів кастомних клавіатур. Сьогодні <strong>CyberGear</strong> — це найбільший хаб ігрового обладнання в Україні з власними шоурумами, де кожен девайс можна протестувати в дії.</p>
+            </div>
+            <div class="tab-pane fade" id="mission" role="tabpanel">
+                <h3 class="text-white">Наша місія</h3>
+                <p class="text-secondary fs-5">Ми віримо, що якісна периферія — це не розкіш, а інструмент, який стирає кордони між гравцем та віртуальним світом. Наша мета: 1ms відгуку у кожного клієнта.</p>
+            </div>
+            <div class="tab-pane fade" id="team" role="tabpanel">
+                <h3 class="text-white">Хто ми?</h3>
+                <p class="text-secondary fs-5">Наша команда складається з колишніх про-плеєрів, технічних фанатів та майстрів RGB-моддингу. Ми не просто продаємо коробки — ми збираємо екосистеми.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-5 text-center">
+        <h2 class="mb-5 text-white">Переваги CyberGear</h2>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 glass-panel h-100">
+                <i class="fas fa-bolt fa-2x text-warning mb-3"></i>
+                <h5 class="text-white">Експрес доставка</h5>
+                <p class="small text-secondary">Твій новий девайс буде у тебе швидше, ніж завершиться завантаження патчу.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 glass-panel h-100">
+                <i class="fas fa-tools fa-2x text-info mb-3"></i>
+                <h5 class="text-white">Сервіс та Моддинг</h5>
+                <p class="small text-secondary">Змащуємо світчі, міняємо кейкапи та проводимо гарантійне обслуговування.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="p-4 glass-panel h-100">
+                <i class="fas fa-trophy fa-2x text-danger mb-3"></i>
+                <h5 class="text-white">Тільки Оригінал</h5>
+                <p class="small text-secondary">Жодних реплік. Тільки сертифікований товар з офіційною гарантією.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-5">
+        <h2 class="text-center mb-4 text-white">Голоси спільноти</h2>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner text-center carousel-custom p-5 shadow-lg">
+                <div class="carousel-item active">
+                    <blockquote class="blockquote">
+                        <p class="mb-4 text-white">“Взяв мишу Logitech G Pro. Клік чіткий, вага ідеальна. CyberGear — кращі в підборі девайсів!”</p>
+                        <footer class="blockquote-footer text-info">Danylo "King", CS2 Pro Player</footer>
+                    </blockquote>
+                </div>
+                <div class="carousel-item">
+                    <blockquote class="blockquote">
+                        <p class="mb-4 text-white">“Допомогли зібрати стрім-лаб «під ключ». Камера, світло, мікрофон — все працює ідеально.”</p>
+                        <footer class="blockquote-footer text-info">Олена, Twitch Streamer</footer>
+                    </blockquote>
+                </div>
+                <div class="carousel-item">
+                    <blockquote class="blockquote">
+                        <p class="mb-4 text-white">“Кастомна клавіатура — це любов. Дякую за допомогу у виборі тихих світчів для нічних каток.”</p>
+                        <footer class="blockquote-footer text-info">Артем, Software Engineer</footer>
+                    </blockquote>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon p-3 border border-info rounded-circle" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon p-3 border border-info rounded-circle" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row text-center glass-panel py-5 mx-0 shadow-lg" style="background: linear-gradient(135deg, rgba(157,0,255,0.1), rgba(0,212,255,0.1));">
+        <div class="col-md-3 stat-box">
+            <h2 class="display-5 fw-bold text-gradient">10+</h2>
+            <p class="text-uppercase small tracking-widest text-secondary">Років досвіду</p>
+        </div>
+        <div class="col-md-3 stat-box">
+            <h2 class="display-5 fw-bold text-info">45к+</h2>
+            <p class="text-uppercase small text-secondary">Проданих девайсів</p>
+        </div>
+        <div class="col-md-3 stat-box">
+            <h2 class="display-5 fw-bold text-purple" style="color: var(--neon-purple)">50+</h2>
+            <p class="text-uppercase small text-secondary">Світових брендів</p>
+        </div>
+        <div class="col-md-3 stat-box">
+            <h2 class="display-5 fw-bold text-danger">99%</h2>
+            <p class="text-uppercase small text-secondary">Win Rate задоволення</p>
+        </div>
+    </div>
+
+    <div class="text-center py-5 rounded-4 mt-5 shadow-lg position-relative overflow-hidden" style="background: linear-gradient(45deg, #1a1c2c, #4a1942);">
+        <div class="position-relative z-index-1">
+            <h3 class="mb-3 text-white">Потрібен апгрейд чи професійна порада?</h3>
+            <p class="text-white-50">Наші експерти допоможуть зібрати ідеальний сетап під твій бюджет та цілі.</p>
+            <a class="btn btn-lg btn-info mt-3 px-5 py-3 fw-bold shadow" href="/contact">
+                <i class="fas fa-paper-plane me-2"></i> Зв’язатися з тех-підтримкою
+            </a>
+        </div>
+    </div>
+
+</div>

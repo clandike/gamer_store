@@ -1,0 +1,379 @@
+﻿@{
+    ViewData["Title"] = "CyberGear Guide — Як обрати ігрові девайси";
+}
+
+<style>
+    :root {
+        --neon-blue: #00d4ff;
+        --neon-purple: #9d00ff;
+        --neon-pink: #ff007a;
+        --dark-surface: #1a1c23;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+        background-color: #0b0e14;
+        color: #e0e0e0;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .guide-section-card {
+        padding: 40px;
+        background: var(--dark-surface);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        margin-bottom: 50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .guide-section-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--neon-blue);
+        }
+
+    .icon-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        color: #fff;
+    }
+
+        .icon-header i {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            filter: drop-shadow(0 0 5px var(--neon-blue));
+        }
+
+    /* Стиль карток категорій */
+    .style-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        border-radius: 15px;
+    }
+
+        .style-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-purple);
+            background: rgba(157, 0, 255, 0.05);
+        }
+
+        .style-card img {
+            height: 140px;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+        }
+
+    /* Таблиця */
+    .table-gaming {
+        color: #ccc;
+        border-color: rgba(255,255,255,0.1);
+    }
+
+        .table-gaming thead {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--neon-blue);
+        }
+
+    /* Картки бюджету */
+    .budget-card {
+        border-radius: 15px;
+        border: 2px solid transparent;
+        transition: 0.3s;
+        background: #12141d;
+    }
+
+        .budget-card.entry {
+            border-color: #28a745;
+        }
+
+        .budget-card.mid {
+            border-color: var(--neon-blue);
+        }
+
+        .budget-card.pro {
+            border-color: var(--neon-pink);
+        }
+
+        .budget-card ul li::before {
+            content: "➣";
+            color: inherit;
+            margin-right: 10px;
+        }
+
+    /* FAQ */
+    .accordion-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 10px;
+        border-radius: 10px !important;
+    }
+
+    .accordion-button {
+        background: transparent;
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .accordion-button:not(.collapsed) {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--neon-blue);
+            box-shadow: none;
+        }
+
+        .accordion-button::after {
+            filter: invert(1);
+        }
+
+    .btn-gaming-primary {
+        background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .btn-gaming-primary:hover {
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+            transform: scale(1.02);
+        }
+</style>
+
+<div class="container my-5">
+    <h1 class="section-title">Гайд по вибору девайсів: Level Up твій Setup</h1>
+
+    <section class="guide-section-card">
+        <h2 class="h4 icon-header"><i class="fas fa-gamepad"></i> 1. Визнач свою спеціалізацію</h2>
+        <p class="text-secondary mb-4">Жанр гри диктує вимоги до заліза. Обирай свій шлях:</p>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+            <div class="col">
+                <div class="card h-100 style-card p-3">
+                    <img src="~/equipment/fps-gear.png" class="card-img-top" alt="FPS Gear">
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-bold text-info">FPS / Шутери</h6>
+                        <p class="card-text small text-muted">Counter-Strike, Valorant. Головне — легка миша та 240Hz+ монітор.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 style-card p-3">
+                    <img src="~/equipment/moba-gear.png" class="card-img-top" alt="MOBA Gear">
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-bold text-warning">MOBA / MMO</h6>
+                        <p class="card-text small text-muted">Dota 2, WoW. Потрібно багато додаткових кнопок на миші та макроси.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 style-card p-3">
+                    <img src="~/equipment/stream-gear.png" class="card-img-top" alt="Streaming Gear">
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-bold text-danger">Стримінг</h6>
+                        <p class="card-text small text-muted">Twitch, YouTube. Пріоритет — якісний мікрофон та світло.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 style-card p-3">
+                    <img src="~/equipment/casual-gear.png" class="card-img-top" alt="Racing Gear">
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-bold text-success">Симрейсинг</h6>
+                        <p class="card-text small text-muted">Forza, F1. Необхідне кермо з Force Feedback та педалі.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-gaming table-hover">
+                <thead>
+                    <tr>
+                        <th>Категорія</th>
+                        <th>Ключова характеристика</th>
+                        <th>Рекомендований набір</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fas fa-crosshairs me-2"></i> Шутери</td>
+                        <td>Низька вага, високий опит (8KHz)</td>
+                        <td>Миша 60г, Механіка (Silver switches), Килимок Speed-серії</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-magic me-2"></i> MMO / MOBA</td>
+                        <td>Кількість програмованих кнопок</td>
+                        <td>Миша з 12 кнопками, Клавіатура з G-клавішами, Hi-Res гарнітура</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-broadcast-tower me-2"></i> Стримінг</td>
+                        <td>Чистота звуку та картинки</td>
+                        <td>Конденсаторний мікрофон, XLR інтерфейс, Кільцева лампа</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="guide-section-card" style="--neon-blue: var(--neon-purple)">
+        <h2 class="h4 icon-header"><i class="fas fa-coins"></i> 2. Розподіл бюджету</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 budget-card entry text-white">
+                    <div class="card-header bg-success text-center fw-bold">Starter Pack</div>
+                    <div class="card-body d-flex flex-column">
+                        <ul class="list-unstyled">
+                            <li>Миша Hator / Bloody</li>
+                            <li>Механічна клавіатура (Outemu)</li>
+                            <li>Гарнітура з 50мм драйверами</li>
+                            <li>Великий тканинний килим</li>
+                        </ul>
+                        <p class="text-center mt-auto mb-0 fw-bold text-success">від 4 500 грн</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 budget-card mid text-white">
+                    <div class="card-header bg-primary text-center fw-bold">Advanced Pro</div>
+                    <div class="card-body d-flex flex-column">
+                        <ul class="list-unstyled">
+                            <li>Logitech G / Razer (бездротові)</li>
+                            <li>Клавіатура на Cherry MX / Gateron</li>
+                            <li>Звукова карта + HyperX Cloud</li>
+                            <li>Ігрове крісло (еко-шкіра)</li>
+                        </ul>
+                        <p class="text-center mt-auto mb-0 fw-bold text-info">від 12 000 грн</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 budget-card pro text-white">
+                    <div class="card-header bg-danger text-center fw-bold">God Mode</div>
+                    <div class="card-body d-flex flex-column">
+                        <ul class="list-unstyled">
+                            <li>Кастомна механіка (Lubed switches)</li>
+                            <li>Finalmouse / Wooting 60HE</li>
+                            <li>Студійні навушники + монітори</li>
+                            <li>Професійний стіл з регулюванням</li>
+                        </ul>
+                        <p class="text-center mt-auto mb-0 fw-bold text-danger">від 35 000 грн</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="guide-section-card" style="--neon-blue: var(--neon-pink)">
+        <h2 class="h4 icon-header"><i class="fas fa-hand-pointer"></i> 3. Ергономіка та Хват</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <p class="text-secondary">Твій комфорт напряму впливає на AIM. Перевір ці параметри:</p>
+                <ul class="list-group list-group-flush bg-transparent">
+                    <li class="list-group-item bg-transparent text-white border-secondary"><i class="fas fa-mouse me-2 text-pink"></i> <strong>Тип хвату:</strong> Долонний, кігтьовий чи пальцевий? Миша має підходити під твій анатомічний хват.</li>
+                    <li class="list-group-item bg-transparent text-white border-secondary"><i class="fas fa-keyboard me-2 text-pink"></i> <strong>Форм-фактор:</strong> Full-size (100%), TKL (80%) чи компактна (60%) для більшого простору миші.</li>
+                    <li class="list-group-item bg-transparent text-white border-secondary"><i class="fas fa-chair me-2 text-pink"></i> <strong>Посадка:</strong> Кут у ліктях має бути 90°. Монітор — на рівні очей, щоб не втомлювати шию.</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="rounded-4 overflow-hidden border border-secondary shadow">
+                    <img src="~/equipment/ergonomics-guide.jpg" class="img-fluid" alt="Ergonomics Guide" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="guide-section-card">
+        <h2 class="h4 icon-header"><i class="fas fa-brain"></i> База знань (FAQ)</h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1">
+                        Дріт чи Wireless? Що швидше?
+                    </button>
+                </h2>
+                <div id="a1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        У 2024 році топові технології (Razer HyperPolling, Logitech Lightspeed) забезпечують затримку менше 1мс, що іноді швидше за дріт. Бездротові девайси дають свободу рухів, що критично для низької сенси.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2">
+                        Які перемикачі (світчі) обрати для клавіатури?
+                    </button>
+                </h2>
+                <div id="a2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-secondary">
+                        <strong>Red (Linear):</strong> найкращі для ігор, тихі та швидкі. <br>
+                        <strong>Blue (Clicky):</strong> чудові для друку, але гучні. <br>
+                        <strong>Brown (Tactile):</strong> золота середина. <br>
+                        <strong>Optical/Magnetic:</strong> найшвидші для кіберспорту.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-center py-5">
+        <div class="p-5 rounded-4" style="background: linear-gradient(135deg, #12141d 0%, #1e1e2f 100%); border: 1px solid var(--neon-blue);">
+            <h3 class="fw-bold mb-4">Готовий зібрати свій Dream Setup?</h3>
+            <div class="d-grid gap-3 col-md-8 mx-auto">
+                <a asp-action="index" asp-controller="shop" class="btn btn-gaming-primary btn-lg rounded-pill shadow">
+                    <i class="fas fa-shopping-cart me-2"></i> Перейти до арсеналу товарів
+                </a>
+                <button id="contactBtn" class="btn btn-outline-info btn-lg rounded-pill">
+                    <i class="fas fa-headset me-2"></i> Консультація з тех-майстром
+                </button>
+            </div>
+            <p class="mt-4 text-muted small">Не впевнений у сумісності? Напиши нам у Discord або Telegram!</p>
+        </div>
+    </section>
+
+    <div id="siteAlertContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;"></div>
+</div>
+
+<script>
+    function showSiteAlert(message, type = 'info') {
+        const alertId = 'alert_' + Date.now();
+        const container = document.getElementById('siteAlertContainer');
+        const alertHtml = `
+            <div id="${alertId}" class="alert glass-panel border-info text-white alert-dismissible fade show" role="alert" style="background: rgba(11,14,20,0.9); border-left: 5px solid var(--neon-blue)">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-robot me-3 fa-lg text-info"></i>
+                    <div>${message}</div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', alertHtml);
+        setTimeout(() => {
+            const el = document.getElementById(alertId);
+            if(el) { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }
+        }, 6000);
+    }
+
+    document.getElementById('contactBtn').addEventListener('click', function () {
+        showSiteAlert("<b>Support Online:</b> Привіт! Я допоможу обрати світчі або мишу під твій хват. <br>Напиши нам: CyberGear_Tech", 'info');
+    });
+</script>

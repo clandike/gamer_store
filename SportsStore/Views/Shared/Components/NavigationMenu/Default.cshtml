@@ -1,0 +1,184 @@
+﻿@model (IEnumerable<string> categories, IEnumerable<string> brands)
+
+@{
+    IEnumerable<string> categories = Model.categories ?? Enumerable.Empty<string>();
+    IEnumerable<string> brands = Model.brands ?? Enumerable.Empty<string>();
+    IEnumerable<string> selectedBrands = ViewBag.SelectedBrands ?? new List<string>();
+    string selectedCategory = ViewBag.SelectedCategory is not null ? ViewBag.SelectedCategory : string.Empty;
+}
+<style>
+    .filter-panel {
+        background: rgba(20, 22, 30, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        color: #e0e0e0;
+        position: sticky;
+        top: 100px;
+    }
+
+    .filter-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.9rem;
+        color: var(--neon-blue, #00d4ff);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        padding-bottom: 10px;
+    }
+
+    /* Поле пошуку */
+    .search-input {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        border-radius: 10px;
+        padding: 10px 15px;
+        transition: 0.3s;
+    }
+
+        .search-input:focus {
+            border-color: var(--neon-blue, #00d4ff) !important;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+            outline: none;
+        }
+
+    /* Кнопки категорій */
+    .category-btn {
+        text-align: left;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+        margin-bottom: 5px;
+        color: #aaa;
+        text-decoration: none;
+    }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .category-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--neon-blue, #00d4ff);
+            color: var(--neon-blue, #00d4ff);
+            font-weight: 600;
+            box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+    /* Бренди - Кастомні чекбокси */
+    .brand-scroll {
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+        .brand-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .brand-scroll::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+    .form-check-input {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+    }
+
+        .form-check-input:checked {
+            background-color: var(--neon-purple, #9d00ff);
+            border-color: var(--neon-purple, #9d00ff);
+            box-shadow: 0 0 8px rgba(157, 0, 255, 0.5);
+        }
+
+    .form-check-label {
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        .form-check-label:hover {
+            color: #fff;
+        }
+
+    /* Селект сортування */
+    .gaming-select {
+        background-color: rgba(0, 0, 0, 0.3) !important;
+        color: #ccc !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 10px !important;
+        cursor: pointer;
+    }
+</style>
+<form id="myForm" method="get" class="filter-panel shadow-lg p-4">
+    <div class="mb-4">
+        <h5 class="filter-title mb-3"><i class="fas fa-search me-2 small"></i> Пошук</h5>
+        <div class="position-relative">
+            <input type="text" name="searchText"
+                   class="form-control search-input"
+                   placeholder="Назва девайсу..."
+                   value="@ViewBag.SearchText"
+                   onchange="document.getElementById('myForm').submit();" />
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="filter-title mb-3"><i class="fas fa-layer-group me-2 small"></i> Категорії</h5>
+        <div class="d-flex flex-column">
+            <a class="category-btn @(selectedCategory == null ? "active" : "")"
+               asp-route="category" asp-route-category="">
+                <i class="fas fa-border-all me-2"></i> Всі модулі
+            </a>
+            @foreach (string category in categories)
+            {
+                <a class="category-btn @(category == selectedCategory ? "active": "")"
+                   asp-route="category" asp-route-category="@category">
+                    @category
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="filter-title mb-3"><i class="fas fa-tag me-2 small"></i> Виробники</h5>
+        <div class="brand-scroll">
+            <div class="row g-0">
+                @foreach (string brand in brands)
+                {
+                    <div class="col-12">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="brands"
+                                   value="@brand"
+                                   id="brand_@brand"
+                                   onclick="document.getElementById('myForm').submit();"
+                                   @(selectedBrands != null && selectedBrands.Contains(brand) ? "checked" : "") />
+                            <label class="form-check-label text-secondary" for="brand_@brand">
+                                @brand
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <h5 class="filter-title mb-3"><i class="fas fa-sort-amount-down me-2 small"></i> Пріоритет</h5>
+        <select id="sortSelect" name="sort" class="form-select gaming-select" onchange="document.getElementById('myForm').submit();">
+            <option value="">-- за замовчуванням --</option>
+            <option value="name_asc" selected="@(ViewBag.SelectedSort == "name_asc")">За назвою (A-Z)</option>
+            <option value="price_asc" selected="@(ViewBag.SelectedSort == "price_asc")">Бюджетні спочатку</option>
+            <option value="price_desc" selected="@(ViewBag.SelectedSort == "price_desc")">Топ-грейд спочатку</option>
+        </select>
+    </div>
+
+    <input type="hidden" name="category" value="@ViewBag.SelectedCategory" />
+</form>
