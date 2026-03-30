@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GamerStore.Data.Repository;
+﻿using GamerStore.Data.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamerStore.Components
 {
@@ -12,15 +12,18 @@ namespace GamerStore.Components
             this.repostory = repostory;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             this.ViewBag.SelectedCategory = this.HttpContext.Request.Query["category"];
             this.ViewBag.SelectedBrands = this.HttpContext.Request.Query["brands"];
             this.ViewBag.SelectedSort = this.HttpContext.Request.Query["sort"];
             this.ViewBag.SearchText = this.HttpContext.Request.Query["searchText"];
 
-            return this.View((this.repostory.Categories.Select(x => x.Name)
-                .OrderBy(x => x).AsEnumerable(), this.repostory.Brands.Select(x => x.Name).OrderBy(x => x).AsEnumerable()));
+            var categories = await this.repostory.GetCategoriesAsync();
+            var brands = await this.repostory.GetBrandsAsync();
+
+            return this.View((categories.Select(x => x.Name)
+                .OrderBy(x => x).AsEnumerable(), brands.Select(x => x.Name).OrderBy(x => x).AsEnumerable()));
         }
     }
 }

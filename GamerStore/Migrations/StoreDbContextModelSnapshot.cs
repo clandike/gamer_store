@@ -22,23 +22,6 @@ namespace GamerStore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("GamerStore.Models.Brand", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
             modelBuilder.Entity("GamerStore.Models.CartLine", b =>
                 {
                     b.Property<int>("CartLineId")
@@ -65,7 +48,24 @@ namespace GamerStore.Migrations
                     b.ToTable("CartLine");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.Category", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("GamerStore.Models.Data.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,57 +82,16 @@ namespace GamerStore.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("GiftWrap")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Shipped")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Zip")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("GamerStore.Models.Product", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
@@ -176,7 +135,56 @@ namespace GamerStore.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.ProductImage", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.ProductDTO", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BrandName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IsInStock")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductDTO");
+                });
+
+            modelBuilder.Entity("GamerStore.Models.Data.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,13 +206,57 @@ namespace GamerStore.Migrations
                     b.ToTable("ProductImages");
                 });
 
+            modelBuilder.Entity("GamerStore.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("GiftWrap")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("GamerStore.Models.OrderInfo", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.ToTable("OrderInfos");
+                });
+
             modelBuilder.Entity("GamerStore.Models.CartLine", b =>
                 {
                     b.HasOne("GamerStore.Models.Order", null)
                         .WithMany("Lines")
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("GamerStore.Models.Product", "Product")
+                    b.HasOne("GamerStore.Models.Data.ProductDTO", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -213,15 +265,15 @@ namespace GamerStore.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.Product", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.Product", b =>
                 {
-                    b.HasOne("GamerStore.Models.Brand", "Brand")
+                    b.HasOne("GamerStore.Models.Data.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("GamerStore.Models.Category", "Category")
+                    b.HasOne("GamerStore.Models.Data.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -232,9 +284,9 @@ namespace GamerStore.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.ProductImage", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.ProductImage", b =>
                 {
-                    b.HasOne("GamerStore.Models.Product", "Product")
+                    b.HasOne("GamerStore.Models.Data.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -243,24 +295,37 @@ namespace GamerStore.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.Brand", b =>
+            modelBuilder.Entity("GamerStore.Models.OrderInfo", b =>
+                {
+                    b.HasOne("GamerStore.Models.Order", "Order")
+                        .WithMany("OrderInfos")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("GamerStore.Models.Data.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("GamerStore.Models.Category", b =>
+            modelBuilder.Entity("GamerStore.Models.Data.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("GamerStore.Models.Data.Product", b =>
+                {
+                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("GamerStore.Models.Order", b =>
                 {
                     b.Navigation("Lines");
-                });
 
-            modelBuilder.Entity("GamerStore.Models.Product", b =>
-                {
-                    b.Navigation("ProductImages");
+                    b.Navigation("OrderInfos");
                 });
 #pragma warning restore 612, 618
         }

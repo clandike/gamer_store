@@ -1,10 +1,11 @@
 ﻿@using GamerStore.Infrastructure
 @using GamerStore.Models
 @using GamerStore.Models.ViewModels
-@model Product
+@using GamerStore.Models.DTO;
+@model ProductDTO
 
 @{
-    string productName = string.Join(" ", Model.ShortDescription, Model.Brand?.Name, Model.Model, Model.Title);
+    string productName = string.Join(" ", Model.ShortDescription, Model.BrandName, Model.Model, Model.Title);
 }
 
 <style>
@@ -112,7 +113,7 @@
     <div class="top-image-wrapper">
         @if (!string.IsNullOrEmpty(Model.ImageFileName))
         {
-            <img src="/products/@Model.ImageFileName" class="top-image" alt="@Model.Brand?.Name @Model.Model" />
+            <img src="/products/@Model.ImageFileName" class="top-image" alt="@Model.BrandName @Model.Model" />
         }
         else
         {
@@ -132,7 +133,7 @@
 
         <form id="@Model?.Id" asp-controller="Cart" asp-antiforgery="true" method="post" class="mt-auto">
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Brand" value="@Model.Brand" />
+            <input type="hidden" asp-for="BrandName" value="@Model.BrandName" />
             <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
 
             @{

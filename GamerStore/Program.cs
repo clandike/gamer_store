@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using GamerStore.Data;
+﻿using GamerStore.Data;
 using GamerStore.Data.Repository;
 using GamerStore.Models;
+using GamerStore.Services;
+using GamerStore.Services.Addiotional;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,13 @@ builder.Services.AddDbContext<StoreDbContext>(opts =>
 });
 
 builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
-builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IOrderInfoRepository, OrderInfoRepository>();
+builder.Services.AddScoped<IPriceService, PriceService>();
+//builder.Services.AddScoped<IOrderInfoService, OrderInfoService>();
 
 builder.Services.AddControllersWithViews();
 

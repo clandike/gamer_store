@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using GamerStore.Models;
+using GamerStore.Models.Data;
 
 namespace GamerStore.Data.Repository
 {
@@ -12,35 +12,35 @@ namespace GamerStore.Data.Repository
             this.context = context;
         }
 
-        public IQueryable<Product> Products => this.context.Products
+        public async Task<List<Product>> GetProductsAsync() => await this.context.Products
             .Include(x => x.Category)
-            .Include(x => x.Brand);
+            .Include(x => x.Brand).ToListAsync();
 
-        public IQueryable<Category> Categories => this.context.Categories;
+        public async Task<List<Category>> GetCategoriesAsync() => await this.context.Categories.ToListAsync();
 
-        public IQueryable<Brand> Brands => context.Brands;
+        public async Task<List<Brand>> GetBrandsAsync() => await this.context.Brands.ToListAsync();
 
-        public void CreateProduct(Product product)
+        public async Task CreateProductAsync(Product product)
         {
-            context.Add(product);
-            context.SaveChanges();
+            await this.context.AddAsync(product);
+            await this.context.SaveChangesAsync();
         }
 
-        public void DeleteProduct(Product product)
+        public async Task DeleteProductAsync(Product product)
         {
-            context.Remove(product);
-            context.SaveChanges();
+            this.context.Remove(product);
+            await this.context.SaveChangesAsync();
         }
 
-        public void SaveProduct(Product product)
+        public async Task SaveProductAsync(Product product)
         {
             if (product.Id == 0)
             {
-                context.Products.Add(product);
+                await this.context.AddAsync(product);
             }
             else
             {
-                var dbEntry = context.Products?.FirstOrDefault(p => p.Id == product.Id);
+                var dbEntry = this.context.Products?.FirstOrDefault(p => p.Id == product.Id);
 
                 if (dbEntry != null)
                 {
@@ -55,7 +55,7 @@ namespace GamerStore.Data.Repository
                 }
             }
 
-            context.SaveChanges();
+            await this.context.SaveChangesAsync();
         }
     }
 }

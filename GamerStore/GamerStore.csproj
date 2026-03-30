@@ -36,4 +36,8 @@
     <Folder Include="wwwroot\icon\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Models\DTO\BrandDTO.cs" />
+  </ItemGroup>
+
 </Project>

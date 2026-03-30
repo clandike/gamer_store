@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GamerStore.Data.Repository;
-using GamerStore.Models;
+﻿using GamerStore.Models;
+using GamerStore.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamerStore.Controllers
 {
     [Route("Order")]
     public class OrderController : Controller
     {
-        private readonly IOrderRepository orderRepository;
+        private readonly IOrderService service;
 
         private readonly Cart cart;
 
-        public OrderController(IOrderRepository orderRepository, Cart cart)
+        public OrderController(IOrderService service, Cart cart)
         {
-            this.orderRepository = orderRepository;
+            this.service = service;
             this.cart = cart;
         }
 
@@ -23,23 +23,35 @@ namespace GamerStore.Controllers
 
         [HttpPost]
         [Route("Checkout")]
-        public IActionResult Checkout(Order order)
+        public async Task<IActionResult> Checkout(Order order)
         {
             if (!this.cart.Lines.Any())
             {
                 this.ModelState.AddModelError(key: string.Empty, errorMessage: "Sorry, your cart is empty!");
             }
-
-            if (this.ModelState.IsValid)
+            else
             {
-                ArgumentNullException.ThrowIfNull(order);
-                order.Lines = this.cart.Lines.ToArray();
-                this.orderRepository.SaveOrder(order);
+                await this.service.SaveOrderAsync(order, this.cart.Lines);
                 this.cart.Clear();
                 return this.View("Completed", order.OrderId);
             }
 
             return this.View();
+        }
+
+        [HttpPost]
+        [Route("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(int orderId, OrderStatus newStatus, string returnUrl)
+        {
+            try
+            {
+                await this.service.ChangeStatusAsync(orderId, newStatus);
+                return this.Redirect(returnUrl);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
         }
     }
 }

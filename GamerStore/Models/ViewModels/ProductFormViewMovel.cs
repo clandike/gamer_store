@@ -1,4 +1,6 @@
-﻿namespace GamerStore.Models.ViewModels
+﻿using GamerStore.Models.Data;
+
+namespace GamerStore.Models.ViewModels
 {
     public class ProductFormViewModel
     {

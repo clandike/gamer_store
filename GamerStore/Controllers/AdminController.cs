@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GamerStore.Data.Repository;
+using GamerStore.Models.Data;
+using GamerStore.Models.DTO;
+using GamerStore.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using GamerStore.Data.Repository;
-using GamerStore.Models;
-using GamerStore.Models.ViewModels;
 
 namespace GamerStore.Controllers
 {
@@ -11,79 +12,54 @@ namespace GamerStore.Controllers
     public class AdminController : Controller
     {
         private readonly IStoreRepository storeRepository;
-        private readonly IOrderRepository orderRepository;
+        private readonly IOrderService orderService;
+        private readonly IProductService productService;
 
-        public AdminController(IStoreRepository storeRepository, IOrderRepository orderRepository)
+        public AdminController(IStoreRepository storeRepository, IOrderService orderService, IProductService productService)
         {
             this.storeRepository = storeRepository;
-            this.orderRepository = orderRepository;
+            this.orderService = orderService;
+            this.productService = productService;
         }
 
         [HttpGet]
         [Route("Orders")]
-        public ViewResult Orders() => this.View(this.orderRepository.Orders);
+        public async Task<ViewResult> Orders()
+        {
+            var orders = await this.orderService.GetOrdersAsync();
+
+            return this.View(orders);
+        }
 
         [HttpGet]
         [Route("Products")]
-        public ViewResult Products() => this.View(this.storeRepository.Products);
-
-        [HttpPost]
-        [Route("MarkShipped")]
-        public IActionResult MarkShipped(int orderId)
-        {
-            if (this.ModelState.IsValid)
-            {
-                Order? order = this.orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
-
-                if (order != null)
-                {
-                    order.Shipped = true;
-                    this.orderRepository.SaveOrder(order);
-                }
-            }
-
-            return this.RedirectToAction("Orders");
-        }
+        public async Task<ViewResult> Products() => this.View(await this.productService.GetProductsAsync());
 
         [HttpGet]
         [Route("Details/{productId:int}")]
-        public ViewResult Details(int productId)
+        public async Task<ViewResult> Details(int productId)
         {
-            Product product = new Product();
+            ProductDTO product = new ProductDTO();
 
             if (this.ModelState.IsValid)
             {
-                product = this.storeRepository.Products.FirstOrDefault(p => p.Id == productId) !;
+                var products = await this.productService.GetProductsAsync();
+                product = products.FirstOrDefault(p => p.Id == productId)!;
             }
 
             return this.View(product);
-        }
-
-        [HttpPost]
-        [Route("Reset")]
-        public IActionResult Reset(int orderId)
-        {
-            Order? order = this.orderRepository.Orders
-                .FirstOrDefault(o => o.OrderId == orderId);
-
-            if (order != null && this.ModelState.IsValid)
-            {
-                order.Shipped = false;
-                this.orderRepository.SaveOrder(order);
-            }
-
-            return this.RedirectToAction("Orders");
         }
 
         [HttpGet]
         [Route("Products/Edit/{productId:long}")]
-        public ViewResult Edit(int productId)
+        public async Task<ViewResult> Edit(int productId)
         {
-            Product? product = null;
+            ProductDTO? product = null;
 
             if (this.ModelState.IsValid)
             {
-                product = this.storeRepository.Products.FirstOrDefault(p => p.Id == productId) !;
+                var products = await this.productService.GetProductsAsync();
+                product = products.FirstOrDefault(p => p.Id == productId)!;
             }
 
             return this.View(product);
@@ -91,52 +67,90 @@ namespace GamerStore.Controllers
 
         [HttpPost]
         [Route("Products/Edit/{productId:long}")]
-        public IActionResult Edit(Product product)
+        public async Task<IActionResult> Edit(ProductDTO productDto)
         {
-                this.storeRepository.SaveProduct(product);
-                return RedirectToAction("Products");
+            var product = new Product()
+            {
+                Id = productDto.Id,
+                BrandId = productDto.BrandId,
+                CategoryId = productDto.CategoryId,
+                Model = productDto.Model,
+                Title = productDto.Title,
+                ShortDescription = productDto.ShortDescription,
+                FullDescription = productDto.FullDescription,
+                Price = productDto.Price,
+                ImageFileName = productDto.ImageFileName,
+                IsInStock = productDto.IsInStock,
+            };
+            await this.storeRepository.SaveProductAsync(product);
+            return RedirectToAction("Products");
         }
 
         [HttpGet("Products/Create")]
         public ViewResult Create()
         {
-            return this.View(new Product());
+            return this.View(new ProductDTO());
         }
 
         [HttpPost]
         [Route("Products/Create")]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(ProductDTO productDto)
         {
-            if (!this.ModelState.IsValid)
+            var product = new Product()
             {
-                return this.View(product);
-            }
+                Id = productDto.Id,
+                BrandId = productDto.BrandId,
+                CategoryId = productDto.CategoryId,
+                Model = productDto.Model,
+                Title = productDto.Title,
+                ShortDescription = productDto.ShortDescription,
+                FullDescription = productDto.FullDescription,
+                Price = productDto.Price,
+                ImageFileName = productDto.ImageFileName,
+                IsInStock = productDto.IsInStock,
+            };
 
-            this.storeRepository.SaveProduct(product);
+            await this.storeRepository.SaveProductAsync(product);
             return this.RedirectToAction("Products");
         }
 
         [HttpGet]
         [Route("Products/Delete/{productId:long}")]
-        public IActionResult Delete(int productId)
+        public async Task<IActionResult> Delete(int productId)
         {
-            Product model = new Product();
+            Product product = new Product();
             if (this.ModelState.IsValid)
             {
-                model = this.storeRepository.Products.FirstOrDefault(p => p.Id == productId) !;
+                var products = await this.storeRepository.GetProductsAsync();
+                product = products.FirstOrDefault(p => p.Id == productId)!;
             }
+
+            var model = new ProductDTO()
+            {
+                Id = product.Id,
+                BrandId = product.BrandId,
+                CategoryId = product.CategoryId,
+                Model = product.Model,
+                Title = product.Title,
+                ShortDescription = product.ShortDescription,
+                FullDescription = product.FullDescription,
+                Price = product.Price,
+                ImageFileName = product.ImageFileName,
+                IsInStock = product.IsInStock
+            };
 
             return this.View(model);
         }
 
         [HttpPost]
         [Route("Products/Delete/{productId:long}")]
-        public IActionResult DeleteProduct(int productId)
+        public async Task<IActionResult> DeleteProduct(int productId)
         {
             if (this.ModelState.IsValid)
             {
-                var product = this.storeRepository.Products.FirstOrDefault(p => p.Id == productId);
-                this.storeRepository.DeleteProduct(product!);
+                var products = await this.storeRepository.GetProductsAsync();
+                var product = products.FirstOrDefault(p => p.Id == productId);
+                await this.storeRepository.DeleteProductAsync(product!);
             }
 
             return this.RedirectToAction("Products");

@@ -1,6 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using GamerStore.Infrastructure;
+﻿using GamerStore.Infrastructure;
+using GamerStore.Models.DTO;
 
 namespace GamerStore.Models
 {
@@ -17,13 +16,13 @@ namespace GamerStore.Models
             return cart;
         }
 
-        public override void AddItem(Product product, int quantity)
+        public override void AddItem(ProductDTO product, int quantity)
         {
             base.AddItem(product, quantity);
             this.Session?.SetJson("Cart", this);
         }
 
-        public override void RemoveLine(Product product)
+        public override void RemoveLine(ProductDTO product)
         {
             base.RemoveLine(product);
             this.Session?.SetJson("Cart", this);

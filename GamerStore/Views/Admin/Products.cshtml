@@ -1,7 +1,7 @@
 ﻿@using GamerStore.Infrastructure
-@using GamerStore.Models
+@using GamerStore.Models.DTO
 @using GamerStore.Models.ViewModels
-@model IQueryable<Product>
+@model List<ProductDTO>
 
 @{
     Layout = "_AdminLayout";
@@ -20,12 +20,12 @@
     <tbody>
         @if (Model?.Count() > 0)
         {
-            @foreach (Product p in Model)
+            @foreach (ProductDTO p in Model)
             {
                 <tr>
                     <td>@p.Id</td>
-                    <td>@p.Brand?.Name @p.Model @p.Title</td>
-                    <td>@p.Category?.Name</td>
+                    <td>@p.BrandName @p.Model @p.Title</td>
+                    <td>@p.CategoryName</td>
                     <td>@p.Price.ToString("c")</td>
                     <td>
                         <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details" asp-route-productId="@p.Id">

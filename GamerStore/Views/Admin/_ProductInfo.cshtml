@@ -1,4 +1,5 @@
-﻿@model Product
+﻿@using GamerStore.Models.DTO;
+@model ProductDTO
 
 <div class="row">
     <div class="col-md-4">
@@ -13,7 +14,7 @@
                 </tr>
                 <tr>
                     <th>Name</th>
-                    <td>@Model?.Brand?.Name</td>
+                    <td>@Model?.BrandName</td>
                 </tr>
                 <tr>
                     <th>Model</th>
@@ -25,7 +26,7 @@
                 </tr>
                 <tr>
                     <th>Category</th>
-                    <td>@Model?.Category?.Name</td>
+                    <td>@Model?.CategoryName</td>
                 </tr>
                 @* <tr>
                     <th>Image source</th>
@@ -34,7 +35,7 @@
                 <tr>
                     <th>Is in stock</th>
                     <td>
-                        @(Model.IsInStock == 1 ? "yes" : "no")
+                        @(Model?.IsInStock == 1 ? "yes" : "no")
                     </td>
                 </tr>
                 <tr>

@@ -1,8 +1,10 @@
-﻿namespace GamerStore.Models.ViewModels
+﻿using GamerStore.Models.DTO;
+
+namespace GamerStore.Models.ViewModels
 {
     public class ProductsListViewModel
     {
-        public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
+        public IEnumerable<ProductDTO> Products { get; set; } = Enumerable.Empty<ProductDTO>();
 
         public PagingInfo PagingInfo { get; set; } = new();
 

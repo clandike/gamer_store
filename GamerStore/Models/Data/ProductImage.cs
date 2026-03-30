@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GamerStore.Models
+namespace GamerStore.Models.Data
 {
     public class ProductImage
     {

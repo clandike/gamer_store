@@ -1,5 +1,5 @@
 ﻿@using GamerStore.Infrastructure
-@using GamerStore.Models
+@using GamerStore.Models.DTO
 @using GamerStore.Models.ViewModels
 @model ProductsListViewModel
 
@@ -9,7 +9,7 @@
 }
 
 <div class="d-flex flex-wrap justify-content-start gap-0">
-    @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
+    @foreach (var p in Model.Products.Any() ? Model.Products : Enumerable.Empty<ProductDTO>())
     {
         <partial name="_ProductSummary" model="p" />
     }

@@ -1,37 +1,46 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GamerStore.Models
 {
+    public enum OrderStatus
+    {
+        Pending,      // створено, але не підтверджено
+        Confirmed,    // підтверджено користувачем
+        Processing,   // обробляється
+        Shipped,      // відправлено
+        Delivered,    // доставлено
+        Cancelled,    // скасовано
+    }
+
     public class Order
     {
         [BindNever]
         public int OrderId { get; set; }
 
+        public int CustomerId { get; set; }
+
         [BindNever]
         public ICollection<CartLine> Lines { get; set; } = new List<CartLine>();
 
-        [BindNever]
-        public bool Shipped { get; set; }
-
-        [Required(ErrorMessage = "Please enter a name")]
-        public string? Name { get; set; }
-
-        public string? Email { get; set; }
-
-        public string? Phone { get; set; }
-
-        [Required(ErrorMessage = "Please enter a city name")]
-        public string? Address { get; set; }
-
-        [Required(ErrorMessage = "Please enter a state name")]
-        public string? State { get; set; }
-
-        public string? Zip { get; set; }
-
-        [Required(ErrorMessage = "Please enter a country name")]
-        public string? Country { get; set; }
-
         public bool GiftWrap { get; set; }
+
+        public decimal Total { get; set; }
+
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+
+        public IEnumerable<OrderInfo> OrderInfos { get; set; }
+    }
+
+    public class OrderInfo
+    {
+        public int Id { get; set; }
+
+        public int OrderId { get; set; }
+
+        public int ProductId { get; set; }
+
+        public int Quantity { get; set; }
+
+        public Order Order { get; set; }
     }
 }

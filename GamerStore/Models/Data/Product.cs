@@ -2,8 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
-
-namespace GamerStore.Models
+namespace GamerStore.Models.Data
 {
     public class Product
     {
@@ -34,6 +33,8 @@ namespace GamerStore.Models
         public decimal Price { get; set; }
 
         public string ImageFileName { get; set; }
+
+        public int Amount { get; set; }
 
         public int IsInStock { get; set; }
 

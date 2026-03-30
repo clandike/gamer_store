@@ -1,19 +1,19 @@
-﻿using GamerStore.Models;
+using GamerStore.Models.Data;
 
 namespace GamerStore.Data.Repository
 {
     public interface IStoreRepository
     {
-        IQueryable<Product> Products { get; }
+        Task<List<Product>> GetProductsAsync();
 
-        IQueryable<Brand> Brands { get; }
+        Task<List<Brand>> GetBrandsAsync();
 
-        IQueryable<Category> Categories { get; }
+        Task<List<Category>> GetCategoriesAsync();
 
-        void SaveProduct(Product product);
+        Task SaveProductAsync(Product product);
 
-        void CreateProduct(Product product);
+        Task CreateProductAsync(Product product);
 
-        void DeleteProduct(Product product);
+        Task DeleteProductAsync(Product product);
     }
 }

@@ -1,15 +1,13 @@
-﻿@model IQueryable<Order>
+﻿@using GamerStore.Models.DTO;
+@model List<OrderDTO>
 
 @{
     Layout = "_AdminLayout";
-    var unshippedOrders = Model.Where(o => !o.Shipped);
-    var shippedOrders = Model.Where(o => o.Shipped);
-
 }
 
-<partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
-<partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+@if (TempData["Error"] is string error)
+{
+    <div class="alert alert-danger">@error</div>
+}
 
-<form asp-action="Orders" method="post">
-    <button class="btn btn-info">Refresh Data</button>
-</form>
+<partial name="_OrderTable" model="Model" />

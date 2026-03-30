@@ -7,17 +7,10 @@ namespace GamerStore.Controllers
     [Route("/")]
     public class HomeController : Controller
     {
-        private readonly IStoreRepository repository;
-
-        public HomeController(IStoreRepository repository)
-        {
-            this.repository = repository;
-        }
-
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return this.View();
         }
     }
 }

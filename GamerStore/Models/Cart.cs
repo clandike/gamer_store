@@ -1,4 +1,7 @@
-﻿namespace GamerStore.Models
+﻿using GamerStore.Models.Discounts;
+using GamerStore.Models.DTO;
+
+namespace GamerStore.Models
 {
     public class Cart
     {
@@ -9,17 +12,31 @@
             get { return this.lines; }
         }
 
-        public virtual void AddItem(Product product, int quantity)
+        public virtual void AddItem(ProductDTO product, int quantity)
         {
-            CartLine? line = this.lines
-                .Find(p => p.Product.Id == product.Id);
+            CartLine? line = this.lines.Find(p => p.Product.Id == product.Id);
 
             if (line is null)
             {
+                List<Promo> appliedPromo = new List<Promo>();
+
+                var timePromo = PromoData.PromoProductTimeBaseds.FirstOrDefault(x => x.Id == product.Id);
+                if (timePromo is not null)
+                {
+                    appliedPromo.Add(timePromo);
+                }
+
+                var categoryPromo = PromoData.PromoCategories.FirstOrDefault(x => x.Id == product.CategoryId);
+                if (categoryPromo is not null)
+                {
+                    appliedPromo.Add(categoryPromo);
+                }
+
                 this.lines.Add(new CartLine
                 {
                     Product = product,
                     Quantity = quantity,
+                    AppliedPromo = appliedPromo,
                 });
             }
             else
@@ -28,11 +45,29 @@
             }
         }
 
-        public virtual void RemoveLine(Product product)
-            => this.lines.RemoveAll(l => l.Product.Id == product.Id);
+        public virtual void RemoveLine(ProductDTO product) => this.lines.RemoveAll(l => l.Product.Id == product.Id);
 
-        public decimal ComputeTotalValue()
-            => this.lines.Sum(e => e.Product.Price * e.Quantity);
+        public decimal ComputeTotalValue() => this.lines.Sum(e => e.Product.Price * e.Quantity);
+
+        public decimal ComputeTotalValueWithLinePromos()
+        {
+            decimal total = 0m;
+
+            foreach (var line in this.lines)
+            {
+                var price = line.Product.Price;
+
+                if (line.AppliedPromo != null && line.AppliedPromo.Any())
+                {
+                    var promo = line.AppliedPromo.First();
+                    price = price * (1 - promo.DiscountPercentage / 100m);
+                }
+
+                total += price * line.Quantity;
+            }
+
+            return total;
+        }
 
         public virtual void Clear() => this.lines.Clear();
     }

@@ -114,11 +114,22 @@
                                     </div>
 
                                     <div class="col-6 col-md-7">
-                                        <h5 class="mb-1 text-white fw-bold">@line.Product.Brand?.Name @line.Product.Model</h5>
+                                        <h5 class="mb-1 text-white fw-bold">@line.Product.BrandName @line.Product.Model</h5>
                                         <p class="text-secondary small mb-2 d-none d-md-block">ID девайсу: #00@line.Product.Id</p>
                                         <div class="d-flex align-items-center gap-3">
                                             <span class="badge badge-qty">x @line.Quantity</span>
-                                            <span class="text-info small">@line.Product.Price.ToString("n0") грн / од.</span>
+                                            @if (line.AppliedPromo != null && line.AppliedPromo.Any())
+                                            {
+                                                var promo = line.AppliedPromo.First();
+                                                var original = line.Product.Price;
+                                                var discounted = (original * (1 - promo.DiscountPercentage / 100));
+                                                <span class="text-muted small"><s>@original.ToString("n0") грн</s></span>
+                                                <span class="text-info small ms-2">@discounted.ToString("n0") грн / од.</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-info small">@line.Product.Price.ToString("n0") грн / од.</span>
+                                            }
                                         </div>
                                     </div>
 
@@ -149,13 +160,26 @@
 
                     <div class="d-flex justify-content-between mb-3 text-secondary">
                         <span>Проміжна сума</span>
-                        <span>@Model?.Cart?.ComputeTotalValue().ToString("n0") грн</span>
+                        <span>@(Model?.Pricing?.BasePrice.ToString("n0") ?? Model?.Cart?.ComputeTotalValue().ToString("n0")) грн</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-4">
                         <span class="text-white">До сплати</span>
-                        <span class="total-price fs-3">@Model?.Cart?.ComputeTotalValue().ToString("n0") <small class="fs-6">грн</small></span>
+                        <span class="total-price fs-3">@(Model?.Pricing?.FinalPrice.ToString("n0") ?? Model?.Cart?.ComputeTotalValue().ToString("n0")) <small class="fs-6">грн</small></span>
                     </div>
+
+                    @if (Model?.Pricing?.AppliedDiscounts?.Any() ?? false)
+                    {
+                        <div class="mb-3">
+                            <h6 class="text-secondary small">Застосовані знижки</h6>
+                            <ul class="list-unstyled small text-secondary">
+                                @foreach(var d in Model.Pricing.AppliedDiscounts)
+                                {
+                                    <li>@d.Name: <strong class="text-white">-@d.Amount.ToString("n0") грн</strong></li>
+                                }
+                            </ul>
+                        </div>
+                    }
 
                     <hr class="border-secondary opacity-25 mb-4">
 
