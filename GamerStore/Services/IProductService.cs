@@ -13,11 +13,15 @@ namespace GamerStore.Services
 
     public interface IProductService
     {
+        Task<CategoryDTO> GetCategoryByIdAsync(int id);
+
         Task<ProductDTO> GetProductAsync(int productId);
 
         Task<PageInfo> GetPaginatedProductsAsync(string[] brands, string? sort, string? searchText, string? category, int pageSize, int productPage);
-        
+
         Task<List<ProductDTO>> GetProductsAsync();
+
+        Task<List<CategoryDTO>> GetCategoriesAsync();
     }
 
     public class ProductService : IProductService
@@ -32,6 +36,9 @@ namespace GamerStore.Services
         public async Task<ProductDTO> GetProductAsync(int id)
         {
             var products = await this.repository.GetProductsAsync();
+            var brands = await this.repository.GetBrandsAsync();
+            var categories = await this.repository.GetCategoriesAsync();
+
             Product? product = products.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
@@ -42,6 +49,7 @@ namespace GamerStore.Services
             {
                 Id = product.Id,
                 BrandId = product.BrandId,
+                BrandName = brands.FirstOrDefault(b => b.Id == product.BrandId)?.Name ?? string.Empty,
                 CategoryId = product.CategoryId,
                 Model = product.Model,
                 Title = product.Title,
@@ -50,6 +58,7 @@ namespace GamerStore.Services
                 Price = product.Price,
                 ImageFileName = product.ImageFileName,
                 IsInStock = product.IsInStock,
+                CategoryName = categories.FirstOrDefault(c => c.Id == product.CategoryId)?.Name ?? string.Empty,
             };
         }
 
@@ -60,6 +69,7 @@ namespace GamerStore.Services
             {
                 Id = p.Id,
                 BrandId = p.BrandId,
+                BrandName = p.Brand?.Name,
                 CategoryId = p.CategoryId,
                 Model = p.Model,
                 Title = p.Title,
@@ -68,39 +78,79 @@ namespace GamerStore.Services
                 Price = p.Price,
                 ImageFileName = p.ImageFileName,
                 IsInStock = p.IsInStock,
+                CategoryName = p.Category?.Name,
             }).ToList();
         }
 
-        public async Task<PageInfo> GetPaginatedProductsAsync(string[] brands, string? sort, string? searchText, string? category, int pageSize, int productPage)
+        public async Task<PageInfo> GetPaginatedProductsAsync(
+    string[] brands,
+    string? sort,
+    string? searchText,
+    string? category,
+    int pageSize,
+    int productPage)
         {
             var listOfProducts = await this.repository.GetProductsAsync();
+
             if (!listOfProducts.Any())
-            {
                 return new PageInfo();
+
+            var query = listOfProducts.AsQueryable();
+
+            // 🔹 Нормалізація вхідних даних
+            var normalizedCategory = category?.Trim().ToLower();
+            var normalizedBrands = brands?
+                .Where(b => !string.IsNullOrWhiteSpace(b))
+                .Select(b => b.Trim().ToLower())
+                .ToArray();
+
+            // 🔹 Фільтрація (category + brands разом працюють коректно)
+            query = query.Where(p =>
+                (normalizedCategory == null || p.Category.Name.ToLower() == normalizedCategory) &&
+                (normalizedBrands == null || normalizedBrands.Length == 0 ||
+                 normalizedBrands.Contains(p.Brand.Name.ToLower()))
+            );
+
+            // 🔹 Пошук
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                var lowerSearch = searchText.Trim().ToLower();
+
+                query = query.Where(p =>
+                    (p.Brand.Name + " " + p.Model + " " + p.Title + " " + p.Category.Name)
+                    .ToLower()
+                    .Contains(lowerSearch)
+                );
             }
 
-            var products = listOfProducts
-            .Where(p => (category == null || p.Category.Name == category) && (brands == null || brands.Length == 0 || brands.Contains(p.Brand.Name)))
-            .OrderBy(p => p.Id)
-            .Skip((productPage - 1) * pageSize)
-            .Take(pageSize);
-
-            products = sort switch
+            // 🔹 Сортування (ВАЖЛИВО: завжди стабільне)
+            query = sort switch
             {
-                "name_asc" => products
-                .OrderBy(p => p.Brand.Name)
-                .ThenBy(p => p.Model)
-                .ThenBy(p => p.Title),
-                "price_asc" => products.OrderBy(p => p.Price),
-                "price_desc" => products.OrderByDescending(p => p.Price),
-                _ => products
+                "name_asc" => query
+                    .OrderBy(p => p.Brand.Name)
+                    .ThenBy(p => p.Model)
+                    .ThenBy(p => p.Title)
+                    .ThenBy(p => p.Id), // 🔥 стабілізатор
+
+                "price_asc" => query
+                    .OrderBy(p => p.Price)
+                    .ThenBy(p => p.Id), // 🔥 стабілізатор
+
+                "price_desc" => query
+                    .OrderByDescending(p => p.Price)
+                    .ThenBy(p => p.Id), // 🔥 стабілізатор
+
+                _ => query.OrderBy(p => p.Id)
             };
 
-            products = products.Where(p => string.IsNullOrEmpty(searchText) ||
-            (p.Brand.Name + " " + p.Model + " " + p.Title + " " + p.Category).ToLower()!.Contains(searchText.ToLower()));
+            // 🔹 Загальна кількість
+            int totalItems = query.Count();
 
-            int totalItems = products
-            .Count();
+            // 🔹 Пагінація (тільки після ВСЬОГО)
+            var products = query
+                .Skip((productPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return new PageInfo()
             {
@@ -122,6 +172,28 @@ namespace GamerStore.Services
 
                 SortedProductCount = totalItems,
             };
+        }
+
+        public async Task<CategoryDTO> GetCategoryByIdAsync(int id)
+        {
+            var categories = await repository.GetCategoriesAsync();
+            var category = categories.FirstOrDefault(c => c.Id == id);
+
+            return new CategoryDTO()
+            {
+                Id = category?.Id ?? 0,
+                Name = category?.Name ?? string.Empty,
+            };
+        }
+
+        public async Task<List<CategoryDTO>> GetCategoriesAsync()
+        {
+            var categories = await repository.GetCategoriesAsync();
+            return categories.Select(c => new CategoryDTO()
+            {
+                Id = c.Id,
+                Name = c.Name,
+            }).ToList();
         }
     }
 }

@@ -9,87 +9,87 @@
     <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 
     <style>
-        :root {
-            --neon-pink: #ff007a;
-            --neon-blue: #00d4ff;
-            --dark-bg: #0b0e14;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0;
-            background-color: var(--dark-bg);
-            color: #f8f9fa;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .main-content {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            /* Фоновий ефект туманності */
-            background-image: radial-gradient(at 0% 0%, rgba(157, 0, 255, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 212, 255, 0.05) 0px, transparent 50%);
-        }
-
-        header {
-            background: rgba(5, 7, 10, 0.8) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid var(--neon-pink);
-            box-shadow: 0 5px 25px rgba(255, 0, 122, 0.2);
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            color: #fff !important;
-            text-transform: uppercase;
-        }
-
-            .navbar-brand span {
-                color: var(--neon-pink);
+            :root {
+                --neon-pink: #ff007a;
+                --neon-blue: #00d4ff;
+                --dark-bg: #0b0e14;
+                --glass-bg: rgba(255, 255, 255, 0.03);
             }
 
-        main {
-            flex-grow: 1;
-            padding: 2rem 0;
-        }
-
-        footer {
-            margin-top: auto;
-            background: #05070a !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1.5rem 0;
-        }
-
-        .footer-logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            color: #444;
-        }
-
-        /* Стилізація RenderBody для таблиці кошика */
-        .cart-container {
-            animation: slideUp 0.5s ease-out;
-        }
-
-        /* Додатковий стиль для кнопок, які можуть бути в RenderBody */
-        .btn-checkout {
-            background: linear-gradient(45deg, var(--neon-pink), #ff4d00);
-            border: none;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
-            .btn-checkout:hover {
-                box-shadow: 0 0 15px rgba(255, 0, 122, 0.5);
-                transform: scale(1.03);
+            html, body {
+                height: 100%;
+                margin: 0;
+                background-color: var(--dark-bg);
+                color: #f8f9fa;
+                font-family: 'Inter', sans-serif;
             }
+
+            .main-content {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                /* Фоновий ефект туманності */
+                background-image: radial-gradient(at 0% 0%, rgba(157, 0, 255, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 212, 255, 0.05) 0px, transparent 50%);
+            }
+
+            header {
+                background: rgba(5, 7, 10, 0.8) !important;
+                backdrop-filter: blur(15px);
+                border-bottom: 2px solid var(--neon-pink);
+                box-shadow: 0 5px 25px rgba(255, 0, 122, 0.2);
+                z-index: 1000;
+            }
+
+            .navbar-brand {
+                font-family: 'Orbitron', sans-serif;
+                letter-spacing: 2px;
+                color: #fff !important;
+                text-transform: uppercase;
+            }
+
+                .navbar-brand span {
+                    color: var(--neon-pink);
+                }
+
+            main {
+                flex-grow: 1;
+                padding: 2rem 0;
+            }
+
+            footer {
+                margin-top: auto;
+                background: #05070a !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05);
+                padding: 1.5rem 0;
+            }
+
+            .footer-logo {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+                color: #444;
+            }
+
+            /* Стилізація RenderBody для таблиці кошика */
+            .cart-container {
+                animation: slideUp 0.5s ease-out;
+            }
+
+            /* Додатковий стиль для кнопок, які можуть бути в RenderBody */
+            .btn-checkout {
+                background: linear-gradient(45deg, var(--neon-pink), #ff4d00);
+                border: none;
+                color: white;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: 0.3s;
+            }
+
+                .btn-checkout:hover {
+                    box-shadow: 0 0 15px rgba(255, 0, 122, 0.5);
+                    transform: scale(1.03);
+                }
     </style>
 </head>
 <body>

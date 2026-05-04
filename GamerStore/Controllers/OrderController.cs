@@ -1,5 +1,6 @@
 ﻿using GamerStore.Models;
 using GamerStore.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamerStore.Controllers

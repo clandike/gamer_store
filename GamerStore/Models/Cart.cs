@@ -20,13 +20,13 @@ namespace GamerStore.Models
             {
                 List<Promo> appliedPromo = new List<Promo>();
 
-                var timePromo = PromoData.PromoProductTimeBaseds.FirstOrDefault(x => x.Id == product.Id);
+                var timePromo = PromoData.PromoProductTimeBased.FirstOrDefault(x => x.ItemId == product.Id);
                 if (timePromo is not null)
                 {
                     appliedPromo.Add(timePromo);
                 }
 
-                var categoryPromo = PromoData.PromoCategories.FirstOrDefault(x => x.Id == product.CategoryId);
+                var categoryPromo = PromoData.PromoCategoryBased.FirstOrDefault(x => x.ItemId == product.CategoryId);
                 if (categoryPromo is not null)
                 {
                     appliedPromo.Add(categoryPromo);
@@ -57,10 +57,9 @@ namespace GamerStore.Models
             {
                 var price = line.Product.Price;
 
-                if (line.AppliedPromo != null && line.AppliedPromo.Any())
+                foreach (var promo in line?.AppliedPromo)
                 {
-                    var promo = line.AppliedPromo.First();
-                    price = price * (1 - promo.DiscountPercentage / 100m);
+                    price *= (1 - promo.DiscountPercentage / 100m);
                 }
 
                 total += price * line.Quantity;

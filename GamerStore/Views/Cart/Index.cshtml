@@ -80,123 +80,185 @@
 
 <div class="container py-4">
     <div class="row g-4">
+
+        <!-- 🔹 ЛІВА ЧАСТИНА (ТОВАРИ) -->
         <div class="col-12 col-lg-8">
+
             <div class="d-flex align-items-center justify-content-between mb-4 px-2">
                 <div>
-                    <h2 class="h3 fw-bold mb-0 text-white text-uppercase tracking-wider">Мій Інвентар</h2>
-                    <p class="text-secondary small mb-0">Слотів зайнято: @(Model?.Cart?.Lines.Count() ?? 0)</p>
+                    <h2 class="h3 fw-bold mb-0 text-white text-uppercase">Мій Інвентар</h2>
+                    <p class="text-secondary small mb-0">
+                        Слотів зайнято: @(Model?.Cart?.Lines.Count() ?? 0)
+                    </p>
                 </div>
+
                 <a asp-action="Index" asp-controller="Shop" class="back-link small">
-                    <i class="fas fa-chevron-left me-1"></i> Повернутися до арсеналу
+                    ← Повернутися до магазину
                 </a>
             </div>
 
-            <div class="row">
-                @if (!(Model?.Cart?.Lines.Any() ?? false))
-                {
-                    <div class="col-12 text-center py-5 glass-panel rounded-4">
-                        <i class="fas fa-ghost fa-3x text-secondary mb-3"></i>
-                        <h4 class="text-muted">Тут поки що пусто...</h4>
-                        <a asp-action="Index" asp-controller="Shop" class="btn btn-outline-info mt-3">Розпочати закупку</a>
-                    </div>
-                }
+            @if (!(Model?.Cart?.Lines.Any() ?? false))
+            {
+                <div class="text-center py-5">
+                    <h4 class="text-muted">Тут поки що пусто...</h4>
+                </div>
+            }
 
-                @foreach (var line in Model?.Cart?.Lines ?? Enumerable.Empty<CartLine>())
-                {
-                    <div class="col-12 mb-3">
-                        <div class="inventory-card card">
-                            <div class="card-body p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-3 col-md-2">
-                                        <div class="product-img-wrapper">
-                                            <img src="/products/@line.Product.ImageFileName" class="img-fluid" alt="@line.Product.Model">
-                                        </div>
-                                    </div>
+            @foreach (var line in Model?.Cart?.Lines ?? Enumerable.Empty<CartLine>())
+            {
+                var original = line.Product.Price;
+                var discounted = line.GetDiscountedPrice();
 
-                                    <div class="col-6 col-md-7">
-                                        <h5 class="mb-1 text-white fw-bold">@line.Product.BrandName @line.Product.Model</h5>
-                                        <p class="text-secondary small mb-2 d-none d-md-block">ID девайсу: #00@line.Product.Id</p>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="badge badge-qty">x @line.Quantity</span>
-                                            @if (line.AppliedPromo != null && line.AppliedPromo.Any())
-                                            {
-                                                var promo = line.AppliedPromo.First();
-                                                var original = line.Product.Price;
-                                                var discounted = (original * (1 - promo.DiscountPercentage / 100));
-                                                <span class="text-muted small"><s>@original.ToString("n0") грн</s></span>
-                                                <span class="text-info small ms-2">@discounted.ToString("n0") грн / од.</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-info small">@line.Product.Price.ToString("n0") грн / од.</span>
-                                            }
-                                        </div>
-                                    </div>
+                <div class="card mb-3 inventory-card">
+                    <div class="card-body">
 
-                                    <div class="col-3 col-md-3 text-end">
-                                        <div class="mb-2 fw-bold text-white fs-5">
-                                            @((line.Quantity * line.Product.Price).ToString("n0")) <small>грн</small>
-                                        </div>
-                                        <form method="post" asp-action="Remove" asp-controller="Cart">
-                                            <input type="hidden" name="id" value="@line.Product.Id" />
-                                            <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl" />
-                                            <button type="submit" class="btn btn-sm btn-remove rounded-pill px-3">
-                                                <i class="fas fa-trash-alt me-1"></i> <span class="d-none d-md-inline">Видалити</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                        <div class="row align-items-center">
+
+                            <!-- 🔹 ЗОБРАЖЕННЯ -->
+                            <div class="col-3 col-md-2">
+                                <img src="/products/@line.Product.ImageFileName"
+                                     class="img-fluid"
+                                     alt="@line.Product.Model" />
                             </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
 
-        <div class="col-12 col-lg-4">
-            <div class="summary-panel card shadow-lg">
-                <div class="card-body p-4">
-                    <h4 class="text-white text-center mb-4 text-uppercase fw-bold" style="letter-spacing: 1px;">Загальний Кредит</h4>
+                            <!-- 🔹 ІНФО -->
+                            <div class="col-6 col-md-7">
 
-                    <div class="d-flex justify-content-between mb-3 text-secondary">
-                        <span>Проміжна сума</span>
-                        <span>@(Model?.Pricing?.BasePrice.ToString("n0") ?? Model?.Cart?.ComputeTotalValue().ToString("n0")) грн</span>
-                    </div>
+                                <h5 class="text-white fw-bold">
+                                    @line.Product.BrandName @line.Product.Model
+                                </h5>
 
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="text-white">До сплати</span>
-                        <span class="total-price fs-3">@(Model?.Pricing?.FinalPrice.ToString("n0") ?? Model?.Cart?.ComputeTotalValue().ToString("n0")) <small class="fs-6">грн</small></span>
-                    </div>
+                                <span class="badge bg-info">x @line.Quantity</span>
 
-                    @if (Model?.Pricing?.AppliedDiscounts?.Any() ?? false)
-                    {
-                        <div class="mb-3">
-                            <h6 class="text-secondary small">Застосовані знижки</h6>
-                            <ul class="list-unstyled small text-secondary">
-                                @foreach(var d in Model.Pricing.AppliedDiscounts)
+                                <!-- 🔹 ЦІНА -->
+                                <div class="mt-2">
+
+                                    @if (original != discounted)
+                                    {
+                                        <span class="text-muted">
+                                            <s>@original.ToString("n0") грн</s>
+                                        </span>
+
+                                        <span class="text-info ms-2">
+                                            @discounted.ToString("n0") грн / од.
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-info">
+                                            @original.ToString("n0") грн / од.
+                                        </span>
+                                    }
+                                </div>
+
+                                <!-- 🔹 PROMO -->
+                                @if (line.AppliedPromo?.Any() == true)
                                 {
-                                    <li>@d.Name: <strong class="text-white">-@d.Amount.ToString("n0") грн</strong></li>
+                                    <div class="small text-success mt-1">
+                                        @foreach (var promo in line.AppliedPromo)
+                                        {
+                                            <div>
+                                                -@Math.Round(promo.DiscountPercentage)% @promo.Name
+                                            </div>
+                                        }
+                                    </div>
                                 }
-                            </ul>
+
+                            </div>
+
+                            <!-- 🔹 СУМА -->
+                            <div class="col-3 col-md-3 text-end">
+
+                                <div class="fw-bold text-white fs-5">
+                                    @line.GetTotalPrice().ToString("n0") грн
+                                </div>
+
+                                <form method="post" asp-action="Remove" asp-controller="Cart">
+                                    <input type="hidden" name="id" value="@line.Product.Id" />
+                                    <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl" />
+
+                                    <button class="btn btn-sm btn-danger mt-2">
+                                        Видалити
+                                    </button>
+                                </form>
+
+                            </div>
+
                         </div>
-                    }
-
-                    <hr class="border-secondary opacity-25 mb-4">
-
-                    <div class="d-grid gap-3">
-                        <a asp-action="Checkout" asp-controller="Order" class="btn btn-checkout py-3 rounded-pill fs-5">
-                            <i class="fas fa-shield-alt me-2"></i> Оформити замовлення
-                        </a>
-                        <a href="@Model?.ReturnUrl" class="btn btn-outline-secondary py-2 rounded-pill">
-                            Продовжити вибір
-                        </a>
-                    </div>
-
-                    <div class="mt-4 text-center">
-                        <small class="text-muted"><i class="fas fa-lock me-2 text-success"></i> Захищений протокол оплати</small>
                     </div>
                 </div>
+            }
+        </div>
+
+        <!-- 🔹 ПРАВА ЧАСТИНА (SUMMARY) -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card summary-panel p-4">
+
+                
+
+                <!-- 🔹 BASE (з урахуванням promo) -->
+                <div class="d-flex justify-content-between text-secondary mb-2">
+                    <h5 class="text-white text-center mb-4">
+                        Загальна сума
+                    </h5>
+                    <span>
+                        @(Model?.Pricing?.OriginalPrice.ToString("n0")
+                          ?? Model?.Cart?.ComputeTotalValue().ToString("n0")) грн
+                    </span>
+                </div>
+                
+                <div class="d-flex justify-content-between text-secondary mb-2">
+                    <span>Знижки</span>
+                    @{
+                        decimal? discount = null;
+
+                        if (Model?.Cart != null)
+                        {
+                            discount = Model.Cart.ComputeTotalValueWithLinePromos()
+                                     - Model.Cart.ComputeTotalValue();
+                        }
+                    }
+
+                    <span>@(discount?.ToString("n0") ?? "0") грн</span>
+                </div>
+
+                <!-- 🔹 DISCOUNTS -->
+                @if (Model?.Pricing?.AppliedDiscounts?.Count() >= 1)
+                {
+                    <div class="mb-3">
+                        <h6 class="text-secondary small">Додаткові знижки</h6>
+
+                        @foreach (var d in Model.Pricing.AppliedDiscounts)
+                        {
+                            <div class="d-flex justify-content-between small">
+                                <span>@d.Name</span>
+                                <span class="text-danger">-@d.Amount.ToString("n0") грн</span>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <hr />
+
+                <!-- 🔹 FINAL -->
+                <div class="d-flex justify-content-between">
+                    <span class="text-white">До сплати</span>
+                    <span class="text-info fs-4 fw-bold">
+                        @(Model?.Pricing?.FinalPrice.ToString("n0")) грн
+                    </span>
+                </div>
+
+                <!-- 🔹 BUTTON -->
+                <div class="mt-4">
+                    <a asp-action="Checkout" asp-controller="Order"
+                           class="btn btn-success w-100">
+                        Оформити замовлення
+                    </a>
+                </div>
+
             </div>
         </div>
+
     </div>
 </div>

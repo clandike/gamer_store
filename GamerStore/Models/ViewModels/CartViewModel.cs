@@ -1,4 +1,5 @@
-﻿using GamerStore.Services.Addiotional;
+﻿using GamerStore.Models.DTO;
+using GamerStore.Services.Addiotional;
 
 namespace GamerStore.Models.ViewModels
 {
@@ -9,6 +10,5 @@ namespace GamerStore.Models.ViewModels
         public Uri? ReturnUrl { get; set; } = new Uri("/", UriKind.Relative);
 
         public PriceCalculationResult? Pricing { get; set; }
-
     }
 }

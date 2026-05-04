@@ -1,4 +1,5 @@
 ﻿using GamerStore.Models;
+using GamerStore.Models.Discounts;
 using GamerStore.Models.DTO;
 
 namespace GamerStore.Services.Addiotional
@@ -8,43 +9,42 @@ namespace GamerStore.Services.Addiotional
         PriceCalculationResult Calculate(Cart cart, CustomerDTO user);
     }
 
-    public class PriceService: IPriceService
+    public class PriceService : IPriceService
     {
-        private readonly IEnumerable<IDiscountRule> _rules;
+        private readonly IEnumerable<IDiscountRule> rules;
 
         public PriceService(IEnumerable<IDiscountRule> rules)
         {
-            _rules = rules;
+            this.rules = rules;
         }
 
         public PriceCalculationResult Calculate(Cart cart, CustomerDTO user)
         {
-            var result = new PriceCalculationResult
-            {
-                BasePrice = cart.ComputeTotalValue(),
-            };
+            var total = cart.ComputeTotalValue();
+            var totalWithPromos = cart.ComputeTotalValueWithLinePromos();
 
-            decimal totalDiscount = 0;
+            var test = this.rules.ToList();
 
-            foreach (var rule in _rules)
-            {
-                if (!rule.IsApplicable(cart, user))
-                    continue;
+            var appliedRules = this.rules.ToList()
+                .Where(r => r.IsApplicable(cart, user))
+                .ToList();
 
-                var discount = rule.CalculateDiscount(cart, user);
-
-                totalDiscount += discount;
-
-                result.AppliedDiscounts.Add(new AppliedDiscount
+            var discounts = appliedRules
+                .Select(r => new DiscountResult
                 {
-                    Name = rule.Name,
-                    Amount = discount
-                });
-            }
+                    Name = r.Name,
+                    Amount = r.CalculateDiscount(cart, user),
+                })
+                .ToList();
 
-            result.FinalPrice = cart.ComputeTotalValue() - totalDiscount;
+            var totalDiscountPercentage = discounts.Sum(d => d.Amount);
 
-            return result;
+            return new PriceCalculationResult
+            {
+                OriginalPrice = total,
+                FinalPrice = totalWithPromos - totalDiscountPercentage,
+                AppliedDiscounts = discounts,
+            };
         }
     }
 }

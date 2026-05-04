@@ -35,6 +35,9 @@ namespace GamerStore.Controllers
                         TotalItems = pageInfo.SortedProductCount,
                     },
                     CurrentCategory = category,
+                    SelectedBrands = brands,
+                    SearchText = searchText,
+                    Sort = sort,
                 };
             }
 

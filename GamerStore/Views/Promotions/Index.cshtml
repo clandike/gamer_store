@@ -1,0 +1,164 @@
+﻿@model PromotionsViewModel
+
+@{
+    ViewData["Title"] = "Акції та знижки";
+}
+
+<style>
+    .promo-card {
+        background: linear-gradient(145deg, rgba(20,22,30,0.95), rgba(30,32,45,0.95));
+        border-radius: 18px;
+        border: 1px solid rgba(0,212,255,0.15);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .promo-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.2);
+            border-color: var(--neon-blue);
+        }
+
+    .promo-glow::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top right, rgba(0,212,255,0.15), transparent);
+    }
+
+    .discount-badge {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--neon-pink);
+    }
+
+    .promo-title {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .promo-subtitle {
+        color: #aaa;
+        font-size: 0.85rem;
+    }
+
+    .timer {
+        font-size: 0.85rem;
+        color: #ffcc00;
+    }
+
+    .progress {
+        height: 6px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    }
+
+    .category-card {
+        background: rgba(25,25,35,0.9);
+        border-radius: 14px;
+        transition: 0.25s;
+    }
+
+        .category-card:hover {
+            background: rgba(35,35,55,1);
+            transform: translateY(-4px);
+        }
+
+    .badge-hot {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: crimson;
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+</style>
+
+<!-- HERO -->
+<div class="mt-4 position-relative rounded-3 overflow-hidden">
+    <img src="~/pageImages/banner-vector1.png" class="w-100" style="max-height:400px; object-fit:cover;" />
+    <div class="position-absolute top-50 start-50 translate-middle text-center">
+        <h1 class="display-4 fw-bold text-white">🔥 АКЦІЇ</h1>
+        <p class="text-light">Встигни забрати максимум вигоди</p>
+    </div>
+</div>
+
+<div class="container py-5">
+
+    <!-- TIME PROMOS -->
+    <h2 class="text-info mb-4">⏳ Гарячі пропозиції</h2>
+
+    <div class="row g-4 mb-5">
+        @foreach (var promo in Model.TimePromos)
+        {
+            var remaining = promo.EndDate - DateTime.Now;
+            var isEndingSoon = remaining.TotalHours < 6;
+
+            <div class="col-md-4">
+                <div class="promo-card promo-glow p-4 h-100">
+
+                    @if (isEndingSoon)
+                    {
+                        <div class="badge-hot">ЗАКІНЧУЄТЬСЯ</div>
+                    }
+
+                    <div class="discount-badge mb-2">
+                        -@promo.DiscountPercentage%
+                    </div>
+
+                    <div class="promo-title mb-1">
+                        @promo.ProductName
+                    </div>
+
+                    <div class="promo-subtitle">
+                        До: @promo.EndDate.ToString("dd.MM HH:mm")
+                    </div>
+
+                    <div class="timer mb-2">
+                        ⏱ @remaining.Hours год @remaining.Minutes хв
+                    </div>
+
+                    <div class="progress mb-3">
+                        <div class="progress-bar"
+                             style="width:@promo.Progress%"></div>
+                    </div>
+
+                    <a asp-action="Index"
+                           asp-controller="Shop"
+                           class="btn btn-outline-gaming w-100">
+                        Переглянути
+                    </a>
+
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- CATEGORY PROMOS -->
+    <h2 class="text-info mb-4">🎯 Знижки по категоріях</h2>
+
+    <div class="row g-4">
+        @foreach (var promo in Model.CategoryPromos)
+        {
+            <div class="col-md-3">
+                <div class="category-card p-4 text-center h-100">
+
+                    <div class="discount-badge">
+                        -@promo.DiscountPercentage%
+                    </div>
+
+                    <div class="promo-title mt-2">
+                        @promo.CategoryName
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -20,6 +20,10 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IOrderInfoRepository, OrderInfoRepository>();
 builder.Services.AddScoped<IPriceService, PriceService>();
+builder.Services.AddScoped<IDiscountRule, LoyaltyDiscountRule>();
+builder.Services.AddScoped<IDiscountRule, BulkDiscountRule>();
+builder.Services.AddScoped<IPromotionsService, PromotionsService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 //builder.Services.AddScoped<IOrderInfoService, OrderInfoService>();
 
 builder.Services.AddControllersWithViews();

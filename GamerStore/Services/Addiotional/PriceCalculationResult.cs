@@ -2,15 +2,19 @@
 {
     public class PriceCalculationResult
     {
-        public decimal BasePrice { get; set; }
+        public decimal OriginalPrice { get; set; }
+
+        public decimal PriceWithPromos { get; set; }
+
         public decimal FinalPrice { get; set; }
 
-        public List<AppliedDiscount> AppliedDiscounts { get; set; } = new();
+        public List<DiscountResult> AppliedDiscounts { get; set; } = new();
     }
 
-    public class AppliedDiscount
+    public class DiscountResult
     {
         public string Name { get; set; }
+
         public decimal Amount { get; set; }
     }
 }

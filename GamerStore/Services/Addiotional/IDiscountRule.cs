@@ -1,8 +1,34 @@
 ﻿using GamerStore.Models;
 using GamerStore.Models.DTO;
+using Newtonsoft.Json.Linq;
 
 namespace GamerStore.Services.Addiotional
 {
+    /// <summary>
+    /// Specifies the available discount rules that can be applied to a transaction.
+    /// </summary>
+    /// <remarks>Use this enumeration to indicate which type of discount logic should be used when processing
+    /// a transaction. The values correspond to different discount strategies, such as loyalty-based or bulk purchase
+    /// discounts.</remarks>
+    public enum DiscountRule
+    {
+        /// <summary>
+        /// Indicates that no options or flags are set.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Indicates that the loyalty program is selected as the reward type.
+        /// </summary>
+        Loyalty = 1,
+
+        /// <summary>
+        /// Indicates that the operation or item is processed in bulk, typically involving multiple entities or actions
+        /// at once.
+        /// </summary>
+        Bulk = 2,
+    }
+
     public interface IDiscountRule
     {
         bool IsApplicable(Cart cart, CustomerDTO user);
@@ -16,12 +42,14 @@ namespace GamerStore.Services.Addiotional
     {
         private Dictionary<Loyalty, decimal> loyalties = new Dictionary<Loyalty, decimal>()
         {
-            { Loyalty.Bronze, 0.1m },
-            { Loyalty.Silver, 0.18m },
-            { Loyalty.Gold, 0.3m },
+            { Loyalty.Bronze, 8 },
+            { Loyalty.Silver, 15 },
+            { Loyalty.Gold, 23 },
         };
 
         public string Name => "Loyalty Discount";
+
+        public DiscountRule DiscountRule => DiscountRule.Loyalty;
 
         public bool IsApplicable(Cart cart, CustomerDTO user)
         {
@@ -31,8 +59,9 @@ namespace GamerStore.Services.Addiotional
         public decimal CalculateDiscount(Cart cart, CustomerDTO user)
         {
             loyalties.TryGetValue(user.LoyaltyLevel, out decimal value);
+            var total = cart.ComputeTotalValueWithLinePromos();
 
-            return cart.ComputeTotalValue() * value; // 10%
+            return total * (value / 100m);
         }
     }
 
@@ -40,14 +69,19 @@ namespace GamerStore.Services.Addiotional
     {
         public string Name => "Bulk Discount";
 
+        public DiscountRule DiscountRule => DiscountRule.Bulk;
+
         public bool IsApplicable(Cart cart, CustomerDTO user)
         {
-            return cart.ComputeTotalValue() >= 1000 || cart.Lines.Count >= 10;
+            return cart.Lines.Sum(x => x.Quantity) >= 3;
         }
 
         public decimal CalculateDiscount(Cart cart, CustomerDTO user)
         {
-            return cart.ComputeTotalValue() * 0.09m;
+            var total = cart.ComputeTotalValueWithLinePromos();
+            var value = 9;
+
+            return total * (value / 100m);
         }
     }
 }
